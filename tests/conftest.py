@@ -16,8 +16,7 @@ def client(app):
 
 @pytest.fixture(scope='class')
 def class_client(request):
-    app = create_app('configs.TestConfig')
-
+    app = create_app()
     # inject class variables
     request.cls.client = app.test_client()
     yield
