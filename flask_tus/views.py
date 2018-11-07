@@ -4,7 +4,7 @@ from flask import request, abort
 
 from flask_tus.models import TusUploads
 from flask_tus.responses import head_response, option_response, post_response, patch_response
-from flask_tus.validators import validate_patch
+from flask_tus.validators import RequestError, handle_request_error, validate_patch
 
 
 class FlaskTus(object):
@@ -20,6 +20,7 @@ class FlaskTus(object):
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
 
         self.uploads = TusUploads(app.config['TUS_UPLOAD_DIR'])
+        app.register_error_handler(RequestError, handle_request_error)
 
         app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload_resource', self.create_upload_resource,
                          methods=['OPTIONS', 'POST'])

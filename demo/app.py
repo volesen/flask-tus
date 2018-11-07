@@ -4,10 +4,11 @@ from flask import Flask, render_template
 
 from flask_tus.views import FlaskTus
 
+app = Flask(__name__)
+
 app.config['TUS_UPLOAD_DIR'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'uploads')
 app.config['TUS_UPLOAD_URL'] = '/files/'
 
-app = Flask(__name__)
 flask_tus = FlaskTus(app)
 
 
