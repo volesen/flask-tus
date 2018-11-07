@@ -3,7 +3,7 @@ import pytest
 
 @pytest.mark.usefixtures('class_client')
 class TestResponses(object):
-    def test_option_request(self):
+    def test_options_request(self):
         response = self.client.options('/files/', headers={'Tus-Version': '1.0.0'})
         # A successful response indicated by the 204 No Content
         # or 200 OK status MUST contain the Tus-Version header.
@@ -12,7 +12,7 @@ class TestResponses(object):
 
     def test_post_request(self):
         response = self.client.post('/files/', headers={'Tus-Version': '1.0.0', 'Upload-Length': '1000'})
-        assert response.status_code == 204
+        assert response.status_code == 201
         assert response.headers.get('Location') is not None
         assert response.headers.get('Upload-Defer-Length') is None
         assert response.headers.get('Upload-Length') == '1000'
@@ -21,7 +21,7 @@ class TestResponses(object):
         # If Upload-Length is unknown, server should
         # respond with Upload-Defer-Length = 1.
         response = self.client.post('/files/', headers={'Tus-Version': '1.0.0'})
-        assert response.status_code == 204
+        assert response.status_code == 201
         assert response.headers.get('Upload-Defer-Length') == '1'
         assert response.headers.get('Upload-Length') is None
 
