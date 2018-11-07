@@ -1,7 +1,10 @@
+from tempfile import mkdtemp
+
 from flask import request, abort
 
 from flask_tus.models import TusUploads
 from flask_tus.responses import head_response, option_response, post_response, patch_response
+from flask_tus.validators import validate_patch
 
 
 class FlaskTus(object):
@@ -13,7 +16,7 @@ class FlaskTus(object):
             self.init_app(app)
 
     def init_app(self, app):
-        app.config.setdefault('TUS_UPLOAD_DIR', '/tmp')
+        app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
 
         self.uploads = TusUploads(app.config['TUS_UPLOAD_DIR'])
@@ -35,10 +38,9 @@ class FlaskTus(object):
 
     def upload_resource(self, upload_id):
         upload = self.uploads.get_upload_or_404(upload_id)
-
         if request.method == 'HEAD':
             return head_response(upload)
-
+        validate_patch(upload)
         chunk = request.data
         if chunk is None:
             abort(404)

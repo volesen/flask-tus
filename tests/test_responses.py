@@ -30,3 +30,8 @@ class TestResponses(object):
         patch_response = self.client.patch('/files/EvenMoreUnlikelyUUID')
         assert head_response.status_code == 404
         assert patch_response.status_code == 404
+
+    def test_content_type_patch(self):
+        resource_url = self.client.post('/files/', headers={'Upload-Length': '1000'}).headers['Location']
+        response = self.client.patch(resource_url)
+        assert response.status_code == 415
