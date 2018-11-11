@@ -7,7 +7,7 @@ class TusError(Exception):
         self.status_code = status_code
 
 
-def handle_request_error(error):
+def handle_tus_error(error):
     response = make_base_response(error.status_code)
     response.status_code = error.status_code
     return response
