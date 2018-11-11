@@ -5,7 +5,7 @@ from .app import create_app
 
 @pytest.fixture
 def app():
-    app = create_app('configs.TestConfig')
+    app = create_app()
     return app
 
 
@@ -18,5 +18,6 @@ def client(app):
 def class_client(request):
     app = create_app()
     # inject class variables
-    request.cls.client = app.test_client()
+    request.cls.app = app
+    request.cls.client = request.cls.app.test_client()
     yield
