@@ -5,6 +5,7 @@ from flask import request, current_app
 from flask_tus.exceptions import TusError, handle_request_error
 from flask_tus.models import TusUploads
 from flask_tus.responses import head_response, option_response, post_response, patch_response
+from flask_tus.validators import validate_patch
 
 
 class FlaskTus(object):
@@ -43,7 +44,7 @@ class FlaskTus(object):
             # validate_head()
             return head_response(upload)
 
-        # validate_patch(upload)
+        validate_patch(upload)
 
         chunk = request.data
         if chunk is None:

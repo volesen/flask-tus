@@ -4,7 +4,7 @@ import os
 import pytest
 
 CHUNK_SIZE = 1024
-
+TEST_FILE = 'tests/data/flask.png'
 
 def read_chunks(file, chunk_size):
     return iter(lambda: file.read(chunk_size), b'')
@@ -13,7 +13,7 @@ def read_chunks(file, chunk_size):
 @pytest.mark.usefixtures('class_client')
 class TestUpload(object):
     def test_chunked_upload(self):
-        with open('data/flask.png', 'rb') as file:
+        with open(TEST_FILE, 'rb') as file:
             file_length = len(file.read())
             file.seek(0)  # Set file pos to 0 after reading
 
@@ -41,4 +41,4 @@ class TestUpload(object):
             resource_id = resource_url.split('/')[-1]
             uploaded_file = os.path.join(self.app.config['TUS_UPLOAD_DIR'], resource_id)  # Get path of uploaded file
 
-            assert filecmp.cmp('data/flask.png', uploaded_file)
+            assert filecmp.cmp(TEST_FILE, uploaded_file)
