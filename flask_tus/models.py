@@ -21,7 +21,6 @@ class TusUpload(object):
     def __init__(self, upload_dir, length=None):
         # Content-Length has to be included on HEAD request and response
         filename = os.path.join(upload_dir, self.upload_id)
-        print(filename)
         self.file = File(filename)
         self.length = length
 
