@@ -4,13 +4,15 @@ import mongoengine
 from flask import current_app
 
 from ..file import File
+from ..models import BaseTusUpload
 
 
-class Upload(mongoengine.Document):
+class Upload(mongoengine.Document, BaseTusUpload):
     created_on = mongoengine.DateTimeField(default=datetime.datetime.now)
     offset = mongoengine.IntField(default=0)
     length = mongoengine.IntField(required=True)
     file_reference = mongoengine.StringField()  # Path to file in FS
+    meta = {'db-alias': current_app.config.get('TUS_MODEL_DB')}
 
     @classmethod
     def create(cls, upload_length):
@@ -27,6 +29,12 @@ class Upload(mongoengine.Document):
         # Uses document id as upload_id
         return self.id
 
+    def append_chunk(self, chunk):
+        self.file.open(mode='ab')  # mode = append+binary
+        self.file.write(chunk)
+        self.file.close()
+        self.offset += len(chunk)  # Size of chunk
+
     @property
     def file(self):
         return File(self.file_reference)
@@ -38,6 +46,3 @@ class Upload(mongoengine.Document):
     @property
     def expired(self):
         return datetime.datetime.now() > self.expires
-
-    class meta:
-        db = current_app.config.get('TUS_MODEL_DB')
