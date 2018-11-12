@@ -1,0 +1,9 @@
+# ignore files with below extensions
+*.pyc
+*.pyo
+*.log
+*.lock
+
+# ignore below directories
+venv/
+__pycache__/

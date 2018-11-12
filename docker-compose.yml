@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    image: food/tus
+    container_name: tus_upload_dev_app
+    command: ash scripts/startup_app.sh
+    depends_on:
+      - mongodb
+    volumes:
+     - .:/app
+    ports:
+      - "5000:5000"
+
+  mongodb:
+    image: mongo:3.7.7
+    restart: always
+    container_name: tus_upload_dev_mongo
+    environment:
+      TZ: Europe/Copenhagen
+    volumes:
+      - ./storage/permastore/mongo:/data/db
