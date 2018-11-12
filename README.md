@@ -3,6 +3,7 @@
 
 # Requirements
 Following software stack is required to run this project:
+* [docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/install/)
 * [python3](https://www.python.org/)
 * [pip3]()
 * [pipenv](https://pipenv.readthedocs.io/en/latest/) or [virtualenv](https://virtualenv.pypa.io/en/latest/installation/)
@@ -17,7 +18,6 @@ $ cd flask-tus
 # pipenv --python $(which python3) install
 $ pipenv --python /path/to/python3 install
 $ pipenv --python /path/to/python3 shell
-
 ```
 
 ### virtualenviroment
@@ -28,7 +28,16 @@ $ cd flask-tus
 $ virtualenv venv
 $ source venv/bin/activate
 $ pip3 install -r requirements.txt
+````
+
+### docker
+```bash
+$ git clone https://github.com/volesen/flask-tus.git
+$ cd flask-tus
+$ docker-compose -f docker-compose.yml up
 ```
+
+
 ### Running a demo project
 ```bash
 $ python demo/app.py
