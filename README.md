@@ -1,9 +1,31 @@
 # flask-tus
 
-[tus](https://www.tus.io) server implementation for Flask.
+[tus](https://www.tus.io) server implementation for [Flask](https://flask.pocoo.org).
 
-## Install
-WIP
+## Demo
+
+### With pipenv:
+```
+git clone https://github.com/volesen/flask-tus.git
+cd flask-tus
+pipenv install
+pipenv shell
+
+```
+
+### Wth virtualenviroments:
+```
+git clone https://github.com/volesen/flask-tus.git
+cd flask-tus
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+### Uploading a file
+```
+python demo/app.py
+```
+Go to [127.0.0.1:8000] and upload a file. The uploaded file will end in `demo/uploads/`
 
 ## Settings
 Settings are added in app.config:
