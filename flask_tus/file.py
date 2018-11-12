@@ -1,5 +1,6 @@
 class BaseFile(object):
-    ''' Proxy object for file '''
+    """ Proxy object for file """
+    file = None
 
     def open(self):
         raise NotImplementedError
