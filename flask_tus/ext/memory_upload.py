@@ -23,9 +23,9 @@ class MemoryUpload(BaseTusUpload):
 
     def append_chunk(self, chunk):
         self.file.open(mode='ab')  # mode = append+binary
-        self.offset += len(chunk)  # Size of chunk
         self.file.write(chunk)
         self.file.close()
+        self.offset += len(chunk)  # Size of chunk
 
     def get(self, upload_id):
         return self.__class__.uploads.get(upload_id)
