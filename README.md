@@ -10,7 +10,6 @@ git clone https://github.com/volesen/flask-tus.git
 cd flask-tus
 pipenv install
 pipenv shell
-
 ```
 
 ### Wth virtualenviroments:
