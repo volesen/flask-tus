@@ -20,8 +20,8 @@ from flask_tus.ext import mongo_upload
 
 def create_app(config):
   app = Flask(__name__)  
-  app.config.fromObject(config)
-  flask_tus = FlasTus()
+  app.config.from_object(config)
+  flask_tus = FlaskTus()
   flask_tus.model = mongo_upload
   flask_tus.init_app()
   return app
