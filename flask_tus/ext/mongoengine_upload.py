@@ -1,4 +1,6 @@
 import datetime
+import os
+import uuid
 
 import mongoengine
 from flask import current_app
@@ -12,28 +14,27 @@ class Upload(mongoengine.Document, BaseTusUpload):
     offset = mongoengine.IntField(default=0)
     length = mongoengine.IntField(required=True)
     file_reference = mongoengine.StringField()  # Path to file in FS
-    meta = {'db-alias': current_app.config.get('TUS_MODEL_DB')}
+
+    @classmethod
+    def get(cls, upload_id):
+        return cls.objects.get(pk=upload_id)
 
     @classmethod
     def create(cls, upload_length):
-        # Custom constructor
-        upload = cls(length=upload_length)
-        upload.save()
-        return upload
-
-    def get(self, upload_id):
-        return self.objects.get(id=upload_id)
+        filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], uuid.uuid4().hex)
+        return cls.objects.create(length=upload_length, file_reference=filename)
 
     @property
     def upload_id(self):
         # Uses document id as upload_id
-        return self.id
+        return str(self.id)
 
     def append_chunk(self, chunk):
-        self.file.open(mode='ab')  # mode = append+binary
-        self.file.write(chunk)
-        self.file.close()
-        self.offset += len(chunk)  # Size of chunk
+        file = self.file
+        file.open(mode='ab')  # mode = append+binary
+        file.write(chunk)
+        file.close()
+        self.update(inc__offset=len(chunk))
 
     @property
     def file(self):
