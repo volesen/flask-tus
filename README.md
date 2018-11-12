@@ -62,7 +62,7 @@ from flask_tus.ext import mongoengine_upload
 def create_app(config):
   app = Flask(__name__)  
   app.config.from_object(config)
-  flask_tus = FlaskTus(model=mongoengine)
+  flask_tus = FlaskTus(model=mongoengine_upload)
   flask_tus.init_app()
   return app
 ```
