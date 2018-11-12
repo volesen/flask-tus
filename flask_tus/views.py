@@ -9,10 +9,10 @@ from flask_tus.validators import validate_patch
 
 
 class FlaskTus(object):
-    def __init__(self, app=None):
+    def __init__(self, app=None, model=MemoryUpload):
         self.app = app
         if app is not None:
-            self.init_app(app)
+            self.init_app(app, model)
 
     def init_app(self, app, model=MemoryUpload):
         app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
