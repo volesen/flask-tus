@@ -7,10 +7,10 @@ class BaseFile(object):
     def close(self):
         raise NotImplementedError
 
-    def write(self):
+    def write(self, content):
         raise NotImplementedError
 
-    def seek(self):
+    def seek(self, position):
         raise NotImplementedError
 
     @property
