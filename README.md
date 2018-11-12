@@ -24,7 +24,7 @@ pip install -r requirements.txt
 ```
 python demo/app.py
 ```
-Go to [127.0.0.1:8000] and upload a file. The uploaded file will end in `demo/uploads/`
+Go to [127.0.0.1:5000](http://127.0.0.1:5000) and upload a file. The uploaded file will end in `demo/uploads/`
 
 ## Settings
 Settings are added in app.config:
