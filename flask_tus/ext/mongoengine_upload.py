@@ -16,13 +16,13 @@ class Upload(mongoengine.Document, BaseTusUpload):
     file_reference = mongoengine.StringField()  # Path to file in FS
 
     @classmethod
-    def get(cls, upload_id):
-        return cls.objects.get(pk=upload_id)
-
-    @classmethod
     def create(cls, upload_length):
         filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], uuid.uuid4().hex)
         return cls.objects.create(length=upload_length, file_reference=filename)
+
+    @classmethod
+    def get(cls, upload_id):
+        return cls.objects.get(pk=upload_id)
 
     @property
     def upload_id(self):
@@ -30,11 +30,11 @@ class Upload(mongoengine.Document, BaseTusUpload):
         return str(self.id)
 
     def append_chunk(self, chunk):
-        file = self.file
+        file = self.file  # Get FS proxy
         file.open(mode='ab')  # mode = append+binary
         file.write(chunk)
         file.close()
-        self.update(inc__offset=len(chunk))
+        self.modify(inc__offset=len(chunk))  # Increment offset
 
     @property
     def file(self):
