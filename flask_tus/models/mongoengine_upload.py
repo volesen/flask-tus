@@ -4,8 +4,8 @@ import datetime
 import mongoengine
 
 from flask import current_app
-from ..file import File
-from ..models import BaseTusUpload
+from ..storage.base_file import File
+from base_model import BaseTusUpload
 
 
 class Upload(mongoengine.Document, BaseTusUpload):

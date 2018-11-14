@@ -1,12 +1,11 @@
-import datetime
 import os
 import uuid
+import datetime
 
 from flask import current_app
-
-from ..file import File
 from ..helpers import get_extension
-from ..models import BaseTusUpload
+from ..storage.file_system import File
+from .base_model import BaseTusUpload
 
 
 class MemoryUpload(BaseTusUpload):

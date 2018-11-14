@@ -1,7 +1,7 @@
 import pytest
 from tempfile import mkdtemp
 from flask import Flask
-from flask_tus.views import FlaskTus
+from flask_tus import FlaskTus
 
 
 def create_app():

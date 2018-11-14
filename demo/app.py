@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template
-from flask_tus.views import FlaskTus
+from flask_tus.main import FlaskTus
 
 app = Flask(__name__)
 app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/storage/uploads'

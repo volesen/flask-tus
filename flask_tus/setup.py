@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name="flask-tus",
     version="0.1",
-    packages=["flask_tus", "flask_tus.ext"],
+    packages=["flask_tus", "flask_tus.models"],
     dependency_links=[],
     install_requires=[],
     extras_require={},

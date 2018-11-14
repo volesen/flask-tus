@@ -1,9 +1,7 @@
 from tempfile import mkdtemp
-
 from flask import request
-
 from flask_tus.exceptions import TusError
-from flask_tus.ext.memory_upload import MemoryUpload
+from flask_tus.models.memory_upload import MemoryUpload
 from flask_tus.helpers import handle_metadata
 from flask_tus.responses import head_response, option_response, post_response, patch_response
 from flask_tus.validators import validate_patch
