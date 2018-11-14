@@ -1,6 +1,10 @@
 import base64
 
 
+def get_extension(filename, depth=1):
+    return filename.split(".")[1:]
+
+
 def handle_metadata(upload_metadata):
     metadata = {}
     for kv in upload_metadata.split(','):

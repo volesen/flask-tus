@@ -1,10 +1,12 @@
 from tempfile import mkdtemp
-from flask import request, current_app
+
+from flask import request
+
+from flask_tus.exceptions import TusError
+from flask_tus.ext.memory_upload import MemoryUpload
 from flask_tus.helpers import handle_metadata
 from flask_tus.responses import head_response, option_response, post_response, patch_response
-from flask_tus.exceptions import TusError
 from flask_tus.validators import validate_patch
-from flask_tus.ext.memory_upload import MemoryUpload
 
 
 class FlaskTus(object):
@@ -13,7 +15,7 @@ class FlaskTus(object):
 
     def __init__(self, app=None, model=MemoryUpload):
         self.app = app
-        if app is not None:
+        if app:
             self.init_app(app, model)
 
     # Application factory
@@ -35,7 +37,7 @@ class FlaskTus(object):
             upload_length = request.headers.get('Upload-Length')
 
             upload_metadata = request.headers.get('Upload-Metadata')
-            if upload_metadata is not None:
+            if upload_metadata:
                 upload_metadata = handle_metadata(upload_metadata)
 
             upload = self.model.create(upload_length, upload_metadata)
