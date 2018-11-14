@@ -11,14 +11,14 @@ from ..models import BaseTusUpload
 class MemoryUpload(BaseTusUpload):
     """ Saves upload state in memory and uploaded file in filesystem """
     uploads = {}
-    upload_id = uuid.uuid4().hex
+    upload_id = str(uuid.uuid4())
     created_on = datetime.datetime.now()
     offset = 0
 
-    def __init__(self, upload_dir, length=None):
+    def __init__(self, upload_dir, file_extension='', length=None):
         # Content-Length has to be included on HEAD request and response
         self.__class__.uploads[self.upload_id] = self
-        self.file = File(os.path.join(upload_dir, self.upload_id))
+        self.file = File(os.path.join(upload_dir, self.upload_id + '.' + file_extension))
         self.length = length
 
     def append_chunk(self, chunk):
@@ -31,8 +31,8 @@ class MemoryUpload(BaseTusUpload):
         return self.__class__.uploads.get(upload_id)
 
     @classmethod
-    def create(cls, upload_length):
-        return cls(current_app.config['TUS_UPLOAD_DIR'], length=upload_length)
+    def create(cls, upload_length, file_extension):
+        return cls(current_app.config['TUS_UPLOAD_DIR'], file_extension, length=upload_length)
 
     @property
     def expires(self):

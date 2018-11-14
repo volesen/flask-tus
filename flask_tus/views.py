@@ -1,5 +1,5 @@
 from tempfile import mkdtemp
-
+import base64
 from flask import request, current_app
 
 from flask_tus.exceptions import TusError, handle_tus_error
@@ -29,8 +29,14 @@ class FlaskTus(object):
         if request.method == 'OPTIONS':
             return option_response()
 
-        upload_length = request.headers.get('Upload-Length')
-        upload = current_app.model.create(upload_length)
+        if request.method == 'POST':
+            upload_length = request.headers.get('Upload-Length')
+            upload_metadata = request.headers.get('Upload-Metadata')
+            file_name_encoded = upload_metadata.split('file_name ')[1]
+            file_name_decoded = base64.b64decode(file_name_encoded).decode("ascii")
+
+            file_extension = '.'.join(file_name_decoded.split('.')[1:])
+            upload = current_app.model.create(upload_length, file_extension)
 
         return post_response(upload)
 

@@ -15,6 +15,7 @@
     input.addEventListener("change", function (e) {
         // Get the selected file from the input element
         var file = e.target.files[0];
+        console.log('xxxxx', file.name);
 
         // Create a new tus upload
         var upload = new tus.Upload(file, {
@@ -22,8 +23,7 @@
             retryDelays: [0, 1000, 3000, 5000],
             chunkSize: 1000,
             metadata: {
-                filename: file.name,
-                filetype: file.type
+                file_name: file.name
             },
             onError: function (error) {
                 console.log("Failed because: " + error)

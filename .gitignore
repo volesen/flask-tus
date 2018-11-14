@@ -5,5 +5,8 @@
 *.lock
 
 # ignore below directories
+dist/
+flask_tus.egg-info/
+build/
 venv/
 __pycache__/
