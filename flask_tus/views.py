@@ -4,6 +4,7 @@ from flask import request, current_app
 
 from flask_tus.exceptions import TusError, handle_tus_error
 from flask_tus.ext.memory_upload import MemoryUpload
+from flask_tus.helpers import handle_metadata
 from flask_tus.responses import head_response, option_response, post_response, patch_response
 from flask_tus.validators import validate_patch
 
@@ -30,7 +31,12 @@ class FlaskTus(object):
             return option_response()
 
         upload_length = request.headers.get('Upload-Length')
-        upload = current_app.model.create(upload_length)
+
+        upload_metadata = request.headers.get('Upload-Metadata')
+        if upload_metadata is not None:
+            upload_metadata = handle_metadata(upload_metadata)
+
+        upload = current_app.model.create(upload_length, upload_metadata)
 
         return post_response(upload)
 

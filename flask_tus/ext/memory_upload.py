@@ -11,11 +11,14 @@ from ..models import BaseTusUpload
 class MemoryUpload(BaseTusUpload):
     """ Saves upload state in memory and uploaded file in filesystem """
     uploads = {}
+    upload_dir = None
     upload_id = uuid.uuid4().hex
     created_on = datetime.datetime.now()
     offset = 0
 
-    def __init__(self, upload_dir, length=None):
+    def __init__(self, upload_dir length = None, metadata = None
+
+    ):
         # Content-Length has to be included on HEAD request and response
         self.__class__.uploads[self.upload_id] = self
         self.file = File(os.path.join(upload_dir, self.upload_id))
