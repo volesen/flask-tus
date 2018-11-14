@@ -4,14 +4,15 @@ class BaseTusUpload(object):
     offset = None
     file = None
     length = None
-
-    def append_chunk(self, chunk):
-        raise NotImplementedError
+    metadata = None
 
     def create(self, upload_length):
         raise NotImplementedError
 
     def get(self, upload_id):
+        raise NotImplementedError
+
+    def append_chunk(self, chunk):
         raise NotImplementedError
 
     @property
