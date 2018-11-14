@@ -1,19 +1,19 @@
-import datetime
 import os
 import uuid
-
+import datetime
 import mongoengine
-from flask import current_app
 
+from flask import current_app
 from ..file import File
 from ..models import BaseTusUpload
 
 
 class Upload(mongoengine.Document, BaseTusUpload):
-    created_on = mongoengine.DateTimeField(default=datetime.datetime.now)
     offset = mongoengine.IntField(default=0)
     length = mongoengine.IntField(required=True)
     file_reference = mongoengine.StringField()  # Path to file in FS
+    created_on = mongoengine.DateTimeField(default=datetime.datetime.now)
+    metadata = mongoengine.DictField()
 
     @classmethod
     def create(cls, upload_length):
@@ -26,17 +26,16 @@ class Upload(mongoengine.Document, BaseTusUpload):
 
     @property
     def upload_id(self):
-        # Uses document id as upload_id
         return str(self.id)
 
     def append_chunk(self, chunk):
-        file = self.file  # Get FS proxy
-        file.open(mode='ab')  # mode = append+binary
+        file = self.file()
+        file.open(mode='ab')
         file.write(chunk)
         file.close()
-        self.modify(inc__offset=len(chunk))  # Increment offset
+        # Increment offset
+        self.modify(inc__offset=len(chunk))
 
-    @property
     def file(self):
         return File(self.file_reference)
 

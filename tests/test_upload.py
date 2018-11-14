@@ -1,32 +1,35 @@
-import filecmp
 import os
-
 import pytest
+import filecmp
 
 CHUNK_SIZE = 1024
 TEST_FILE = 'tests/data/flask.png'
 
-def read_chunks(file, chunk_size):
-    return iter(lambda: file.read(chunk_size), b'')
-
 
 @pytest.mark.usefixtures('class_client')
 class TestUpload(object):
+
+    @staticmethod
+    def __read_chunks(file, chunk_size):
+        return iter(lambda: file.read(chunk_size), b'')
+
     def test_chunked_upload(self):
         with open(TEST_FILE, 'rb') as file:
             file_length = len(file.read())
-            file.seek(0)  # Set file pos to 0 after reading
 
-            # Get upload endpoint
+            # Set file pos to 0 after reading
+            file.seek(0)
+
+            # Create initial upload (first upload)
             post_response = self.client.post('/files/', headers={
                 'Tus-Version': '1.0.0',
                 'Upload-Length': file_length
             })
             resource_url = post_response.headers['Location']
 
+            # Upload chunks
             offset = 0
-            for chunk in read_chunks(file, CHUNK_SIZE):
-                # Upload chunk
+            for chunk in self.__read_chunks(file, CHUNK_SIZE):
                 patch_response = self.client.patch(resource_url, data=chunk, headers={
                     'Tus-Version': '1.0.0',
                     'Content-Type': 'application/offset+octet-stream',
@@ -34,8 +37,10 @@ class TestUpload(object):
                     'Upload-Offset': offset,
                 })
                 offset += len(chunk)
-                assert patch_response.status_code == 204  # Successful upload
-                assert offset == int(patch_response.headers.get('Upload-Offset'))  # Does offsets match
+
+                # assert for 204 and offsets match
+                assert patch_response.status_code == 204
+                assert offset == int(patch_response.headers.get('Upload-Offset'))
 
             # Compare test file and uploaded file
             resource_id = resource_url.split('/')[-1]

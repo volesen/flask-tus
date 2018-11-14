@@ -8,6 +8,7 @@ def make_base_response(status_code):
     response.headers['Tus-Resumable'] = '1.0.0'
     response.headers['Tus-Version'] = '1.0.0'
     response.headers['Tus-Max-Size'] = current_app.config['TUS_MAX_SIZE']
+
     return response
 
 
@@ -42,18 +43,16 @@ def head_response(upload):
     else:
         response.headers['Upload-Length'] = upload.length
 
-    # The Server MUST prevent the client and/or proxies from
-    # caching the response by adding the Cache-Control: no-store
-    # header to the response
+    # The Server MUST prevent the client and/or proxies from caching the response by adding the Cache-Control: no-store header to the response
     response.headers['Cache-Control'] = 'no-store'
 
     return response
 
 
 def patch_response(upload):
-    response = make_base_response(204)
     # The Server MUST acknowledge successful PATCH requests with the 204 No Content status. It MUST include the
     # Upload-Offset header containing the new offset.
+    response = make_base_response(204)
     response.headers['Upload-Offset'] = upload.offset
 
     return response
@@ -61,9 +60,8 @@ def patch_response(upload):
 
 def option_response():
     # A successful response indicated by the 204 No Content or 200 OK status MUST contain the Tus-Version header.
-    response = make_base_response(204)
-
     # It MAY include the Tus-Extension and Tus-Max-Size headers.
+    response = make_base_response(204)
     response.headers['Tus-Extensions'] = 'creation'
 
     return response

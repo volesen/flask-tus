@@ -1,4 +1,5 @@
 class BaseTusUpload(object):
+    """Upload interface"""
     upload_id = None
     created_on = None
     offset = None
@@ -6,7 +7,7 @@ class BaseTusUpload(object):
     length = None
     metadata = None
 
-    def create(self, upload_length):
+    def create(self, upload_length, metadata=None):
         raise NotImplementedError
 
     def get(self, upload_id):

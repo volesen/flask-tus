@@ -1,9 +1,8 @@
-import datetime
 import os
 import uuid
+import datetime
 
 from flask import current_app
-
 from ..file import File
 from ..models import BaseTusUpload
 
@@ -11,29 +10,30 @@ from ..models import BaseTusUpload
 class MemoryUpload(BaseTusUpload):
     """ Saves upload state in memory and uploaded file in filesystem """
     uploads = {}
-    upload_dir = None
     upload_id = uuid.uuid4().hex
     created_on = datetime.datetime.now()
     offset = 0
 
-    def __init__(self, upload_dir, length=None, metadata=None):
-        # Content-Length has to be included on HEAD request and response
+    def __init__(self, length=None, metadata=None):
         self.__class__.uploads[self.upload_id] = self
-        self.file = File(os.path.join(upload_dir, self.upload_id))
+        # length has to be included on HEAD request and response
+        self.file = File(os.path.join(current_app.config['TUS_UPLOAD_DIR'], self.upload_id))
         self.length = length
+        self.metadata = metadata
 
     def append_chunk(self, chunk):
-        self.file.open(mode='ab')  # mode = append+binary
+        self.file.open(mode='ab')
         self.file.write(chunk)
         self.file.close()
         self.offset += len(chunk)  # Size of chunk
 
-    def get(self, upload_id):
-        return self.__class__.uploads.get(upload_id)
+    @classmethod
+    def get(cls, upload_id):
+        return cls.uploads.get(upload_id)
 
     @classmethod
     def create(cls, upload_length, metadata):
-        return cls(current_app.config['TUS_UPLOAD_DIR'], length=upload_length, metadata=metadata)
+        return cls(length=upload_length, metadata=metadata)
 
     @property
     def expires(self):

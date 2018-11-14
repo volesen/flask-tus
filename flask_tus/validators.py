@@ -1,5 +1,4 @@
 from flask import request
-
 from flask_tus.exceptions import TusError
 
 
@@ -24,5 +23,5 @@ def validate_patch(upload):
 
     # If a PATCH request does not include a Content-Length header containing an integer value larger than 0,
     # the server SHOULD return a 400 Bad Request status.
-    if not (int(request.headers.get('Content-Length')) > 0):
+    if int(request.headers.get('Content-Length')) <= 0:
         raise TusError(400)

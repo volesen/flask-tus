@@ -1,12 +1,27 @@
 import pytest
+from tempfile import mkdtemp
+from flask import Flask
+from flask_tus.views import FlaskTus
 
-from .app import create_app
+
+def create_app():
+    app = Flask(__name__)
+    app.config.update({
+        'TESTING': True,
+        'TUS_UPLOAD_DIR': mkdtemp(),
+        'TUS_UPLOAD_VIEW': '/files/',
+        'TUS_MAX_SIZE': 2 ** 32  # 4 gigabytes
+    })
+
+    flask_tus = FlaskTus()
+    flask_tus.init_app(app)
+
+    return app
 
 
 @pytest.fixture
 def app():
-    app = create_app()
-    return app
+    return create_app()
 
 
 @pytest.fixture
@@ -16,8 +31,6 @@ def client(app):
 
 @pytest.fixture(scope='class')
 def class_client(request):
-    app = create_app()
-    # inject class variables
-    request.cls.app = app
+    request.cls.app = create_app()
     request.cls.client = request.cls.app.test_client()
     yield
