@@ -2,6 +2,7 @@ from tempfile import mkdtemp
 from flask import request
 from flask_tus.exceptions import TusError
 from flask_tus.models.memory_upload import MemoryUpload
+from flask_tus.models.mongoengine_upload import MongoengineUpload
 from flask_tus.helpers import handle_metadata
 from flask_tus.responses import head_response, option_response, post_response, patch_response
 from flask_tus.validators import validate_patch
@@ -12,6 +13,13 @@ class FlaskTus(object):
     model = None
 
     def __init__(self, app=None, model=MemoryUpload):
+
+        # TODO check for instanceof()
+        # links: https://infohost.nmt.edu/tcc/help/pubs/python/web/isinstance-function.html
+        # links: http://docs.mongoengine.org/projects/flask-mongoengine/en/latest/
+        # if str(model) == "flask_mongoengine.MongoEngine":
+        #     model = MongoengineUpload
+
         self.app = app
         if app:
             self.init_app(app, model)

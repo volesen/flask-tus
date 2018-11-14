@@ -4,11 +4,11 @@ import datetime
 import mongoengine
 
 from flask import current_app
-from ..storage.base_file import File
-from base_model import BaseTusUpload
+from ..storage.file_system import File
+from .base_model import BaseTusUpload
 
 
-class Upload(mongoengine.Document, BaseTusUpload):
+class MongoengineUpload(mongoengine.Document, BaseTusUpload):
     offset = mongoengine.IntField(default=0)
     length = mongoengine.IntField(required=True)
     file_reference = mongoengine.StringField()  # Path to file in FS
