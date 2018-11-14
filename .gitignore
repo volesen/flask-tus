@@ -5,5 +5,9 @@
 *.lock
 
 # ignore below directories
+.pytest_cache/
+dist/
+flask_tus.egg-info/
+build/
 venv/
 __pycache__/
