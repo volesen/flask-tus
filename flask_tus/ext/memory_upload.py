@@ -16,9 +16,7 @@ class MemoryUpload(BaseTusUpload):
     created_on = datetime.datetime.now()
     offset = 0
 
-    def __init__(self, upload_dir length = None, metadata = None
-
-    ):
+    def __init__(self, upload_dir, length=None, metadata=None):
         # Content-Length has to be included on HEAD request and response
         self.__class__.uploads[self.upload_id] = self
         self.file = File(os.path.join(upload_dir, self.upload_id))
@@ -34,8 +32,8 @@ class MemoryUpload(BaseTusUpload):
         return self.__class__.uploads.get(upload_id)
 
     @classmethod
-    def create(cls, upload_length):
-        return cls(current_app.config['TUS_UPLOAD_DIR'], length=upload_length)
+    def create(cls, upload_length, metadata):
+        return cls(current_app.config['TUS_UPLOAD_DIR'], length=upload_length, metadata=metadata)
 
     @property
     def expires(self):

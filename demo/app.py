@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, render_template
+
 from flask_tus.views import FlaskTus
 
 app = Flask(__name__)
