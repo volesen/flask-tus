@@ -5,11 +5,9 @@ from flask_tus.app import FlaskTus
 
 
 app = Flask(__name__)
-
-# TODO fix tests
-# app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/storage/uploads'
-# app.config['TUS_UPLOAD_URL'] = '/files/'
-# app.config['TUS_MAX_SIZE'] = 2 ** 32  # 4GB
+app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/storage/uploads'
+app.config['TUS_UPLOAD_URL'] = '/files/'
+app.config['TUS_MAX_SIZE'] = 2 ** 32  # 4GB
 
 # from flask_mongoengine import MongoEngine
 # app.config['MONGODB_SETTINGS'] = {
