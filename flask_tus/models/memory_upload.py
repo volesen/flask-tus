@@ -1,17 +1,18 @@
+import datetime
 import os
 import uuid
-import datetime
 
 from flask import current_app
-from ..utilities import get_extension
-from ..storage.file_system import FileSystem
+
 from .base_model import BaseTusUpload
+from ..storage.file_system import FileSystem
+from ..utilities import get_extension
 
 
 class MemoryUpload(BaseTusUpload):
     """ Saves upload state in memory and uploaded file in filesystem """
     uploads = {}
-    upload_id = str(uuid.uuid4())
+
     created_on = datetime.datetime.now()
     offset = 0
 
@@ -24,6 +25,7 @@ class MemoryUpload(BaseTusUpload):
             filename = filename + '.' + get_extension(metadata.get('file_name'))
 
         # length has to be included on HEAD request and response
+        self.upload_id = str(uuid.uuid4())
         self.file = FileSystem(filename)
         self.length = length
         self.metadata = metadata
