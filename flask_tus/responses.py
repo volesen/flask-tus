@@ -17,8 +17,7 @@ def post_response(upload):
     response = make_base_response(201)
 
     # The Upload-Defer-Length response header indicates that the size of the upload is not known currently and will
-    # be transferred later. Its value MUST be 1. If the length of an upload is not deferred, this header MUST be
-    # omitted.
+    # be transferred later. Its value MUST be 1. If the length of an upload is not deferred, this header MUST be omitted.
     if upload.length is None:
         response.headers['Upload-Defer-Length'] = '1'
     else:
