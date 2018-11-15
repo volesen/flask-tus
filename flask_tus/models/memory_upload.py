@@ -12,7 +12,7 @@ from ..utilities import get_extension
 class MemoryUpload(BaseTusUpload):
     """ Saves upload state in memory and uploaded file in filesystem """
     uploads = {}
-
+    upload_id = None
     created_on = datetime.datetime.now()
     offset = 0
 
