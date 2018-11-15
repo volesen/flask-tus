@@ -3,28 +3,28 @@ import uuid
 import datetime
 
 from flask import current_app
-from ..helpers import get_extension
-from ..storage.file_system import File
+from ..utilities import get_extension
+from ..storage.file_system import FileSystem
 from .base_model import BaseTusUpload
 
 
 class MemoryUpload(BaseTusUpload):
     """ Saves upload state in memory and uploaded file in filesystem """
     uploads = {}
-    upload_id = uuid.uuid4().hex
+    upload_id = str(uuid.uuid4())
     created_on = datetime.datetime.now()
     offset = 0
 
     def __init__(self, length=None, metadata=None):
         self.__class__.uploads[self.upload_id] = self
-        # length has to be included on HEAD request and response
 
         filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], self.upload_id)
 
         if metadata and metadata.get('file_name'):
             filename = filename + '.' + get_extension(metadata.get('file_name'))
 
-        self.file = File(filename)
+        # length has to be included on HEAD request and response
+        self.file = FileSystem(filename)
         self.length = length
         self.metadata = metadata
 
@@ -32,7 +32,7 @@ class MemoryUpload(BaseTusUpload):
         self.file.open(mode='ab')
         self.file.write(chunk)
         self.file.close()
-        self.offset += len(chunk)  # Size of chunk
+        self.offset += len(chunk)
 
     @classmethod
     def get(cls, upload_id):

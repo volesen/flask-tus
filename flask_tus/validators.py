@@ -10,6 +10,7 @@ def validate_version():
         raise TusError(412)
 
 
+# link: https://tus.io/protocols/resumable-upload.html#patch
 def validate_patch(upload):
     # All PATCH requests MUST use Content-Type: application/offset+octet-stream, otherwise the server SHOULD return a
     #  415 Unsupported Media Type status.
@@ -25,3 +26,11 @@ def validate_patch(upload):
     # the server SHOULD return a 400 Bad Request status.
     if int(request.headers.get('Content-Length')) <= 0:
         raise TusError(400)
+
+    # TODO: Implement 404 -If the servers receives a PATCH request against a non-existent resource it SHOULD return a 404 Not Found status.
+
+
+# TODO: validate head request/response
+# link: https://tus.io/protocols/resumable-upload.html#head
+def validate_head(upload):
+    pass

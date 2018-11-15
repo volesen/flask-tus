@@ -1,7 +1,7 @@
 from .base_file import BaseFile
 
 
-class File(BaseFile):
+class FileSystem(BaseFile):
     """File System -interface implementation"""
     name = None
     file = None

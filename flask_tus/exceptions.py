@@ -12,4 +12,5 @@ class TusError(Exception):
     def error_handler(error):
         response = make_base_response(error.status_code)
         response.status_code = error.status_code
+
         return response
