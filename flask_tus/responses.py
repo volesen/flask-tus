@@ -5,8 +5,8 @@ def make_base_response(status_code):
     # If this was inherited from flask.Response changing the response_class for the app object (eg. for custom
     # headers or CSRF tokens), would not affect TUS-responses, thus this pattern
     response = make_response('', status_code)
-    response.headers['Tus-Resumable'] = '1.0.0'
     response.headers['Tus-Version'] = '1.0.0'
+    response.headers['Tus-Resumable'] = '1.0.0'
     response.headers['Tus-Max-Size'] = current_app.config['TUS_MAX_SIZE']
 
     return response
@@ -17,8 +17,7 @@ def post_response(upload):
     response = make_base_response(201)
 
     # The Upload-Defer-Length response header indicates that the size of the upload is not known currently and will
-    # be transferred later. Its value MUST be 1. If the length of an upload is not deferred, this header MUST be
-    # omitted.
+    # be transferred later. Its value MUST be 1. If the length of an upload is not deferred, this header MUST be omitted.
     if upload.length is None:
         response.headers['Upload-Defer-Length'] = '1'
     else:
@@ -33,8 +32,8 @@ def post_response(upload):
 def head_response(upload):
     response = make_base_response(204)
 
-    # The Server MUST always include the Upload-Offset header in the response for a HEAD request, even if the offset
-    # is 0, or the upload is already considered completed.
+    # The Server MUST always include the Upload-Offset header in the response for a HEAD request,
+    # even if the offset is 0, or the upload is already considered completed.
     response.headers['Upload-Offset'] = upload.offset
 
     # If the size of the upload is known, the Server MUST include the Upload-Length header in the response.
@@ -43,7 +42,7 @@ def head_response(upload):
     else:
         response.headers['Upload-Length'] = upload.length
 
-    # The Server MUST prevent the client and/or proxies from caching the response by adding the Cache-Control: no-store header to the response
+    # The Server MUST prevent the client and/or proxies from caching the response by adding the Cache-Control: no-store
     response.headers['Cache-Control'] = 'no-store'
 
     return response

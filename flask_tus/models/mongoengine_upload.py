@@ -4,8 +4,8 @@ import datetime
 import mongoengine
 
 from flask import current_app
-from ..storage.file_system import File
 from .base_model import BaseTusUpload
+from ..storage.file_system import FileSystem
 
 
 class MongoengineUpload(mongoengine.Document, BaseTusUpload):
@@ -37,7 +37,7 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
         self.modify(inc__offset=len(chunk))
 
     def file(self):
-        return File(self.file_reference)
+        return FileSystem(self.file_reference)
 
     @property
     def expires(self):
