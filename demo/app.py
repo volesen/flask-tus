@@ -6,10 +6,12 @@ from flask_tus.app import FlaskTus
 
 app = Flask(__name__)
 
-# from flask_mongoengine import MongoEngine
+# TODO fix tests
 # app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/storage/uploads'
 # app.config['TUS_UPLOAD_URL'] = '/files/'
 # app.config['TUS_MAX_SIZE'] = 2 ** 32  # 4GB
+
+# from flask_mongoengine import MongoEngine
 # app.config['MONGODB_SETTINGS'] = {
 #     'db': DB_NAME,
 #     'host': DB_HOST,
@@ -27,4 +29,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    # app.run(host="0.0.0.0", debug=True)
+    app.run(host="127.0.0.1", debug=True)
