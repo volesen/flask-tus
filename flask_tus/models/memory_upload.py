@@ -12,23 +12,22 @@ from ..utilities import get_extension
 class MemoryUpload(BaseTusUpload):
     """ Saves upload state in memory and uploaded file in filesystem """
     uploads = {}
-
     created_on = datetime.datetime.now()
     offset = 0
 
     def __init__(self, length=None, metadata=None):
-        self.__class__.uploads[self.upload_id] = self
-
+        self.upload_id = str(uuid.uuid4())
         filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], self.upload_id)
 
         if metadata and metadata.get('file_name'):
             filename = filename + '.' + get_extension(metadata.get('file_name'))
 
         # length has to be included on HEAD request and response
-        self.upload_id = str(uuid.uuid4())
         self.file = FileSystem(filename)
         self.length = length
         self.metadata = metadata
+        self.__class__.uploads[self.upload_id] = self
+
 
     def append_chunk(self, chunk):
         self.file.open(mode='ab')
