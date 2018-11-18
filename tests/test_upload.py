@@ -1,6 +1,6 @@
-import os
-import pytest
 import filecmp
+
+import pytest
 
 CHUNK_SIZE = 1024
 TEST_FILE = 'tests/data/flask.png'
@@ -42,8 +42,8 @@ class TestUpload(object):
                 assert patch_response.status_code == 204
                 assert offset == int(patch_response.headers.get('Upload-Offset'))
 
-            # Compare test file and uploaded file
+            #  Get filename for upload and compare test file and uploaded file
             resource_id = resource_url.split('/')[-1]
-            uploaded_file = os.path.join(self.app.config['TUS_UPLOAD_DIR'], resource_id)  # Get path of uploaded file
+            uploaded_file = self.flask_tus.model.get(resource_id).file.name
 
             assert filecmp.cmp(TEST_FILE, uploaded_file)

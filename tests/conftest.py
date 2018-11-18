@@ -1,6 +1,8 @@
-import pytest
 from tempfile import mkdtemp
+
+import pytest
 from flask import Flask
+
 from flask_tus import FlaskTus
 
 
@@ -16,12 +18,13 @@ def create_app():
     flask_tus = FlaskTus()
     flask_tus.init_app(app)
 
-    return app
+    return app, flask_tus
 
 
 @pytest.fixture
 def app():
-    return create_app()
+    app, flask_tus = create_app()
+    return app
 
 
 @pytest.fixture
@@ -31,6 +34,6 @@ def client(app):
 
 @pytest.fixture(scope='class')
 def class_client(request):
-    request.cls.app = create_app()
+    request.cls.app, request.cls.flask_tus = create_app()
     request.cls.client = request.cls.app.test_client()
     yield
