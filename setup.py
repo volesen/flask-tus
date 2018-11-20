@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from setuptools import setup
 
 with open('README.md') as readme:
@@ -6,9 +7,10 @@ with open('README.md') as readme:
 setup(
     name="flask-tus",
     version="0.1",
-    packages=["flask_tus"],
+    packages=["flask_tus", "flask_tus.models"],
     dependency_links=[],
-    install_requires=['Flask'],
+    install_requires=['Flask == 1.0.2'],
+    test_requires=['pytest'],
     extras_require={},
     package_data={},
     author="Vincent Olesen",
