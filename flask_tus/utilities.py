@@ -12,3 +12,9 @@ def extract_metadata(upload_metadata):
         metadata[key] = base64.b64decode(value).decode('ascii')
 
     return metadata
+
+
+def extract_checksum(upload_checksum):
+    algorithm, value = upload_checksum.split(' ')
+    checksum = base64.b64decode(value).decode('ascii')
+    return algorithm, checksum

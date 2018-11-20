@@ -61,6 +61,6 @@ def option_response():
     # A successful response indicated by the 204 No Content or 200 OK status MUST contain the Tus-Version header.
     # It MAY include the Tus-Extension and Tus-Max-Size headers.
     response = make_base_response(204)
-    response.headers['Tus-Extensions'] = 'creation'
-
+    response.headers['Tus-Extensions'] = 'creation, checksum'
+    response.headers['Tus-Checksum-Algorithm'] = 'md5,sha1'
     return response

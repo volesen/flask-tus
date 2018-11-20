@@ -1,6 +1,10 @@
+import hashlib
+
 from flask import request, current_app
 
+from flask_tus.constants import supported_algorithms
 from flask_tus.exceptions import TusError
+from flask_tus.utilities import extract_checksum
 
 
 def validate_version():
@@ -11,8 +15,12 @@ def validate_version():
         raise TusError(412)
 
 
-# link: https://tus.io/protocols/resumable-upload.html#patch
+# Link: https://tus.io/protocols/resumable-upload.html#patch
 def validate_patch(upload):
+    # If the servers receives a PATCH request against a non-existent resource it SHOULD return a 404 Not Found status.
+    if upload is None:
+        raise TusError(404)
+
     # All PATCH requests MUST use Content-Type: application/offset+octet-stream, otherwise the server SHOULD return a
     #  415 Unsupported Media Type status.
     if request.headers.get('Content-Type') != 'application/offset+octet-stream':
@@ -28,13 +36,20 @@ def validate_patch(upload):
     if int(request.headers.get('Content-Length')) <= 0:
         raise TusError(400)
 
-    # TODO: Implement 404 -If the servers receives a PATCH request against a non-existent resource it SHOULD return a 404 Not Found status.
+    # If a PATCH request does not include a chunk, raise error
+    if request.data is None:
+        raise TusError(404)
+
+    upload_checksum = request.headers.get('Upload-Checksum')
+    if upload_checksum is not None:
+        validate_chunk(request.data, upload_checksum)
 
 
-# TODO: validate head request/response
-# link: https://tus.io/protocols/resumable-upload.html#head
+# Link: https://tus.io/protocols/resumable-upload.html#head
 def validate_head(upload):
-    pass
+    # If the servers receives a HEAD request against a non-existent resource it SHOULD return a 404 Not Found status.
+    if upload is None:
+        raise TusError(404)
 
 
 def validate_post():
@@ -42,5 +57,22 @@ def validate_post():
 
     if upload_length is None:
         return
+
     if int(upload_length) > current_app.config['TUS_MAX_SIZE']:
         raise TusError(413)
+
+
+# Link: https://tus.io/protocols/resumable-upload.html#checksum
+def validate_chunk(chunk, upload_checksum):
+    algorithm, checksum = extract_checksum(upload_checksum)
+
+    # The server may respond 400 Bad Request if the checksum algorithm is not supported by the server
+    if algorithm not in supported_algorithms:
+        raise TusError(400)
+
+    m = hashlib.new(algorithm)
+    m.update(chunk)
+
+    # The server may respond 460 Checksum Mismatch if the checksums mismatch
+    if m.hexdigest() != checksum:
+        raise TusError(460)
