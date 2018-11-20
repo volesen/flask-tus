@@ -4,6 +4,7 @@ from flask import request
 
 from flask_tus.exceptions import TusError
 from flask_tus.models.memory_upload import MemoryUpload
+from flask_tus.models.mongoengine_upload import MongoengineUpload
 from flask_tus.responses import head_response, option_response, post_response, patch_response
 from flask_tus.utilities import extract_metadata
 from flask_tus.validators import validate_patch, validate_post, validate_head
@@ -15,11 +16,8 @@ class FlaskTus(object):
 
     def __init__(self, app=None, model=MemoryUpload):
 
-        # TODO check for instanceof()
-        # links: https://infohost.nmt.edu/tcc/help/pubs/python/web/isinstance-function.html
-        # links: http://docs.mongoengine.org/projects/flask-mongoengine/en/latest/
-        # if str(model) == "flask_mongoengine.MongoEngine":
-        #     model = MongoengineUpload
+        if str(model.__class__) == "<class 'flask_mongoengine.MongoEngine'>":
+            model = MongoengineUpload
 
         if app:
             self.app = app
