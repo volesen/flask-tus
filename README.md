@@ -14,22 +14,19 @@ Following software stack is required to run this project:
 ```bash
 $ git clone https://github.com/volesen/flask-tus.git
 $ cd flask-tus
-
 # pipenv --python $(which python3) install
 $ pipenv --python /path/to/python3 install
 $ pipenv --python /path/to/python3 shell
-$ easy_install setup.py
+$ ./setup.py install
 ```
 
 ### virtualenviroment
 ```bash
 $ git clone https://github.com/volesen/flask-tus.git
 $ cd flask-tus
-
 $ virtualenv -p python3 venv
 $ source venv/bin/activate
-$ python flask_tus/setup.py install
-$ pip3 install -r requirements.txt
+$ ./setup.py install
 ```
 
 ### docker

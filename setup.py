@@ -7,7 +7,7 @@ with open('README.md') as readme:
 setup(
     name="flask-tus",
     version="0.1",
-    packages=["flask_tus", "flask_tus.models"],
+    packages=["flask_tus", "flask_tus.models", "flask_tus.storage"],
     dependency_links=[],
     install_requires=['Flask == 1.0.2'],
     test_requires=['pytest'],
