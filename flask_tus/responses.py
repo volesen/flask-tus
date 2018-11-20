@@ -1,5 +1,7 @@
 from flask import make_response, current_app
 
+from .utilities import format_date
+
 
 def make_base_response(status_code):
     # If this was inherited from flask.Response changing the response_class for the app object (eg. for custom
@@ -25,6 +27,8 @@ def post_response(upload):
 
     # The Server MUST set the Location header to the URL of the created resource. This URL MAY be absolute or relative.
     response.headers['location'] = current_app.config['TUS_UPLOAD_URL'] + upload.upload_id
+
+    response.headers['Upload-Expires'] = format_date(upload.expires)
 
     return response
 
@@ -53,6 +57,7 @@ def patch_response(upload):
     # Upload-Offset header containing the new offset.
     response = make_base_response(204)
     response.headers['Upload-Offset'] = upload.offset
+    response.headers['Upload-Expires'] = format_date(upload.expires)
 
     return response
 
@@ -61,6 +66,6 @@ def option_response():
     # A successful response indicated by the 204 No Content or 200 OK status MUST contain the Tus-Version header.
     # It MAY include the Tus-Extension and Tus-Max-Size headers.
     response = make_base_response(204)
-    response.headers['Tus-Extensions'] = 'creation, checksum'
+    response.headers['Tus-Extensions'] = 'creation,expiration,checksum'
     response.headers['Tus-Checksum-Algorithm'] = 'md5,sha1'
     return response

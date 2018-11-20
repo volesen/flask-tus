@@ -1,3 +1,4 @@
+from datetime import timedelta
 from tempfile import mkdtemp
 
 import pytest
@@ -12,7 +13,8 @@ def create_app():
         'TESTING': True,
         'TUS_UPLOAD_DIR': mkdtemp(),
         'TUS_UPLOAD_VIEW': '/files/',
-        'TUS_MAX_SIZE': 2 ** 32  # 4 gigabytes
+        'TUS_MAX_SIZE': 2 ** 32,  # 4 gigabytes
+        'TUS_TIMEDELTA': timedelta(days=1)
     })
 
     flask_tus = FlaskTus()

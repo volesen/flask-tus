@@ -21,6 +21,9 @@ def validate_patch(upload):
     if upload is None:
         raise TusError(404)
 
+    if upload.expired:
+        raise TusError(410)
+
     # All PATCH requests MUST use Content-Type: application/offset+octet-stream, otherwise the server SHOULD return a
     #  415 Unsupported Media Type status.
     if request.headers.get('Content-Type') != 'application/offset+octet-stream':
