@@ -19,6 +19,12 @@ class TestResponses(object):
         assert response.headers.get('Upload-Defer-Length') is None
         assert response.headers.get('Upload-Length') == '1000'
 
+    def test_upload_max(self):
+        upload_length = self.app.config['TUS_MAX_SIZE'] + 1
+        response = self.client.post('/files/', headers={'Tus-Version': '1.0.0', 'Upload-Length': upload_length})
+
+        assert response.status_code == 413
+
     def test_defer_post(self):
         # If Upload-Length is unknown, server should respond with Upload-Defer-Length = 1.
         response = self.client.post('/files/', headers={'Tus-Version': '1.0.0'})

@@ -1,4 +1,5 @@
-from flask import request
+from flask import request, current_app
+
 from flask_tus.exceptions import TusError
 
 
@@ -34,3 +35,12 @@ def validate_patch(upload):
 # link: https://tus.io/protocols/resumable-upload.html#head
 def validate_head(upload):
     pass
+
+
+def validate_post():
+    upload_length = request.headers.get('Upload_Length')
+
+    if upload_length is None:
+        return
+    if int(upload_length) > current_app.config['TUS_MAX_SIZE']:
+        raise TusError(413)

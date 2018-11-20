@@ -1,11 +1,12 @@
 from tempfile import mkdtemp
+
 from flask import request
+
 from flask_tus.exceptions import TusError
 from flask_tus.models.memory_upload import MemoryUpload
-from flask_tus.models.mongoengine_upload import MongoengineUpload
-from flask_tus.utilities import extract_metadata
 from flask_tus.responses import head_response, option_response, post_response, patch_response
-from flask_tus.validators import validate_patch
+from flask_tus.utilities import extract_metadata
+from flask_tus.validators import validate_patch, validate_post
 
 
 class FlaskTus(object):
@@ -40,6 +41,7 @@ class FlaskTus(object):
 
         # Crate a resource
         if request.method == 'POST':
+            validate_post()
             upload_length = request.headers.get('Upload-Length')
             upload_metadata = request.headers.get('Upload-Metadata')
             if upload_metadata:
