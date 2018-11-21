@@ -1,3 +1,5 @@
+import os
+
 from .base_file import BaseFile
 
 
@@ -19,10 +21,16 @@ class FileSystem(BaseFile):
         return self.file
 
     def close(self):
-        return self.file.close()
+        if self.file:
+            return self.file.close()
 
     def write(self, content):
         return self.file.write(content)
 
     def seek(self, position):
         return self.file.seek(position)
+
+    def delete(self):
+        # Close file before deleting (Otherwise Windows throws exception )
+        self.close()
+        os.remove(self.name)

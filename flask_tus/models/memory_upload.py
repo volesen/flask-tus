@@ -11,7 +11,7 @@ from ..utilities import get_extension
 
 class MemoryUpload(BaseTusUpload):
     """ Saves upload state in memory and uploaded file in filesystem """
-    uploads = {}
+    objects = {}
     upload_id = None
     created_on = datetime.datetime.now()
     offset = 0
@@ -23,11 +23,10 @@ class MemoryUpload(BaseTusUpload):
         if metadata and metadata.get('file_name'):
             filename = filename + '.' + get_extension(metadata.get('file_name'))
 
-        # length has to be included on HEAD request and response
         self.file = FileSystem(filename)
         self.length = length
         self.metadata = metadata
-        self.__class__.uploads[self.upload_id] = self
+        self.__class__.objects[self.upload_id] = self
 
     def append_chunk(self, chunk):
         self.file.open(mode='ab')
@@ -37,7 +36,7 @@ class MemoryUpload(BaseTusUpload):
 
     @classmethod
     def get(cls, upload_id):
-        return cls.uploads.get(upload_id)
+        return cls.objects.get(upload_id)
 
     @classmethod
     def create(cls, upload_length, metadata):
@@ -50,3 +49,11 @@ class MemoryUpload(BaseTusUpload):
     @property
     def expired(self):
         return datetime.datetime.now() > self.expires
+
+    def delete(self):
+        self.file.delete()
+        del self.__class__.objects[self.upload_id]
+
+    @classmethod
+    def delete_expired(cls):
+        cls.objects = {upload_id: upload for upload_id, upload in cls.objects.items() if not upload.expired}

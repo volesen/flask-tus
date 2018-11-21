@@ -14,5 +14,8 @@ class BaseFile(object):
     def seek(self, position):
         raise NotImplementedError
 
+    def delete(self):
+        raise NotImplementedError
+
     def closed(self):
         return not self.file or self.file.closed
