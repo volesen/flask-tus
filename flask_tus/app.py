@@ -33,6 +33,7 @@ class FlaskTus(object):
                          methods=['OPTIONS', 'POST'])
         app.add_url_rule('{}<upload_id>'.format(app.config['TUS_UPLOAD_URL']), 'upload_resource', self.upload_resource,
                          methods=['HEAD', 'PATCH'])
+        app.flask_tus = self
 
     def create_upload_resource(self):
         # Get server configuration

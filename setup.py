@@ -22,7 +22,7 @@ setup(
     url="http://github.com/volesen/flask-tus",
     entry_points={
         'flask.commands': [
-            'my-command=flask_tus.manage.commands:cli'
+            'tus=flask_tus.manage.commands:cli'
         ],
     }
 )
