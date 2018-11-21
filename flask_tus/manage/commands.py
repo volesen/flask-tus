@@ -11,10 +11,11 @@ def cli():
 @cli.command()
 @with_appcontext
 def delete_expired():
+    ''' Deletes expired uploads '''
     click.echo('Deleting expired uploads')
     try:
         current_app.flask_tus.model.delete_expired()
     except Exception as e:
         click.echo(e)
     else:
-        click.echo('Succesfully deleted expired uploads deleted')
+        click.echo('Successfully deleted expired uploads deleted')

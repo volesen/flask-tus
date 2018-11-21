@@ -28,5 +28,5 @@ class TestResponses(object):
 
         patch_response = self.client.patch(resource_url, headers={'Tus-Version': '1.0.0', 'Content-Length': '1000',
                                                                   'Upload-Offset': '0'})
-        # Assert 404 not found, as resource should be deleted
+        # Assert 404 Not Found, as resource should be deleted
         assert patch_response.status_code == 404

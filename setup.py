@@ -10,7 +10,7 @@ setup(
     packages=find_packages(),
     dependency_links=[],
     install_requires=['Flask == 1.0.2'],
-    test_requires=['pytest'],
+    tests_require=['pytest'],
     extras_require={},
     package_data={},
     author="Vincent Olesen",
