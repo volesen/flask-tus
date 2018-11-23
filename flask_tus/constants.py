@@ -1,1 +1,1 @@
-supported_algorithms = {'md5', 'sha1'}
+SUPPORTED_ALGORITHMS = {'md5', 'sha1'}

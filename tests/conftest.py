@@ -1,10 +1,9 @@
+import pytest
+
+from flask import Flask
+from flask_tus import FlaskTus
 from datetime import timedelta
 from tempfile import mkdtemp
-
-import pytest
-from flask import Flask
-
-from flask_tus import FlaskTus
 
 
 def create_app():

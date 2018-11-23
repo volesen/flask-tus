@@ -1,8 +1,7 @@
 import hashlib
 
 from flask import request, current_app
-
-from flask_tus.constants import supported_algorithms
+from flask_tus.constants import SUPPORTED_ALGORITHMS
 from flask_tus.exceptions import TusError
 from flask_tus.utilities import extract_checksum
 
@@ -29,7 +28,7 @@ def validate_patch(upload):
     if request.headers.get('Content-Type') != 'application/offset+octet-stream':
         raise TusError(415)
 
-    # The Upload-Offset header’s value MUST be equal to the current offset of the resource.  If the offsets do not
+    # The Upload-Offset header's value MUST be equal to the current offset of the resource. If the offsets do not
     # match, the Server MUST respond with the 409 Conflict status without modifying the upload resource.
     if int(request.headers.get('Upload-Offset')) != upload.offset:
         raise TusError(409)
@@ -70,7 +69,7 @@ def validate_chunk(chunk, upload_checksum):
     algorithm, checksum = extract_checksum(upload_checksum)
 
     # The server may respond 400 Bad Request if the checksum algorithm is not supported by the server
-    if algorithm not in supported_algorithms:
+    if algorithm not in SUPPORTED_ALGORITHMS:
         raise TusError(400)
 
     m = hashlib.new(algorithm)
