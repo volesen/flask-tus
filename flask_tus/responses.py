@@ -68,4 +68,11 @@ def option_response():
     response = make_base_response(204)
     response.headers['Tus-Extensions'] = 'creation,expiration,checksum'
     response.headers['Tus-Checksum-Algorithm'] = 'md5,sha1'
+
+    return response
+
+
+def delete_response():
+    response = make_base_response(204)
+
     return response

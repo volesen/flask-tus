@@ -7,7 +7,7 @@ from flask_tus.models.memory_upload import MemoryUpload
 from flask_tus.models.mongoengine_upload import MongoengineUpload
 from flask_tus.responses import head_response, option_response, post_response, patch_response
 from flask_tus.utilities import extract_metadata
-from flask_tus.validators import validate_patch, validate_post, validate_head
+from flask_tus.validators import validate_patch, validate_post, validate_head, validate_delete
 
 
 class FlaskTus(object):
@@ -29,8 +29,10 @@ class FlaskTus(object):
         app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.register_error_handler(TusError, TusError.error_handler)
-        app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload_resource', self.create_upload_resource, methods=['OPTIONS', 'POST'])
-        app.add_url_rule('{}<upload_id>'.format(app.config['TUS_UPLOAD_URL']), 'upload_resource', self.upload_resource, methods=['HEAD', 'PATCH'])
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload_resource', self.create_upload_resource,
+                         methods=['OPTIONS', 'POST'])
+        app.add_url_rule('{}<upload_id>'.format(app.config['TUS_UPLOAD_URL']), 'upload_resource', self.upload_resource,
+                         methods=['HEAD', 'PATCH'])
         app.flask_tus = self
 
     def create_upload_resource(self):
@@ -66,3 +68,10 @@ class FlaskTus(object):
             upload.append_chunk(chunk)
 
             return patch_response(upload)
+
+        if request.method == 'DELETE':
+            validate_delete()
+
+            upload.delete()
+
+            return delete_response()
