@@ -1,7 +1,8 @@
+import datetime
 import os
 import uuid
+
 import mongoengine
-import datetime
 from flask import current_app
 
 from .base_model import BaseTusUpload
@@ -20,12 +21,12 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
 
     @classmethod
     def create(cls, upload_length, metadata=None):
-        filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
+        path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
         if metadata and metadata.get('file_name'):
-            filename = filename + '.' + get_extension(metadata.get('file_name'))
+            path = path + '.' + get_extension(metadata.get('file_name'))
 
-        return cls.objects.create(length=upload_length, file_reference=filename, metadata=metadata)
+        return cls.objects.create(length=upload_length, path=path, metadata=metadata)
 
     @classmethod
     def get(cls, upload_id):
@@ -49,7 +50,7 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
 
     @property
     def file(self):
-        return FileSystem(self.file_reference)
+        return FileSystem(self.path)
 
     @property
     def expires(self):
@@ -64,7 +65,7 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
         # REVIEW Lukasz Dynowski
         # NOTE This is a dangerous assumption. What if you don't have permissions to delete file? or you no longer have access to storage?
         # FIXME Use exceptions to handle unexpected behavior. If no error(s) is thrown then proceed with super(***).delete(****)
-        FileSystem(self.file_reference).delete()
+        FileSystem(self.path).delete()
         super(MongoengineUpload, self).delete(*args, **kwargs)
 
     @classmethod
