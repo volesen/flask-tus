@@ -1,13 +1,11 @@
 import datetime
 import os
 
-import mongoengine
 from flask import Flask, render_template
 
 from flask_tus import FlaskTus
 from flask_tus.models.mongoengine_upload import MongoengineUpload
 
-mongoengine.connect(host='mongodb://Flask:Test123@ds052968.mlab.com:52968/mongodb-sandbox')
 app = Flask(__name__)
 app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/storage/uploads'
 app.config['TUS_UPLOAD_URL'] = '/files/'

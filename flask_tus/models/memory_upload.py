@@ -20,6 +20,7 @@ class MemoryUpload(BaseTusUpload):
         self.upload_id = str(uuid.uuid4())
 
         filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], self.upload_id)
+
         if metadata and metadata.get('file_name'):
             filename = filename + '.' + get_extension(metadata.get('file_name'))
 
