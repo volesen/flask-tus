@@ -32,5 +32,7 @@ class FileSystem(BaseFile):
 
     def delete(self):
         # Close file before deleting (Otherwise Windows throws exception )
+        # TODO you might add try except here
+        # REVIEW: Lukasz Dynowski
         self.close()
         os.remove(self.name)

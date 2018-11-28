@@ -29,10 +29,8 @@ class FlaskTus(object):
         app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.register_error_handler(TusError, TusError.error_handler)
-        app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload_resource', self.create_upload_resource,
-                         methods=['OPTIONS', 'POST'])
-        app.add_url_rule('{}<upload_id>'.format(app.config['TUS_UPLOAD_URL']), 'upload_resource', self.upload_resource,
-                         methods=['HEAD', 'PATCH'])
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload_resource', self.create_upload_resource, methods=['OPTIONS', 'POST'])
+        app.add_url_rule('{}<upload_id>'.format(app.config['TUS_UPLOAD_URL']), 'upload_resource', self.upload_resource, methods=['HEAD', 'PATCH'])
         app.flask_tus = self
 
     def create_upload_resource(self):

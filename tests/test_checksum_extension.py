@@ -1,8 +1,7 @@
 import base64
+import pytest
 import filecmp
 import hashlib
-
-import pytest
 
 CHUNK_SIZE = 1024
 TEST_FILE = 'tests/data/flask.png'

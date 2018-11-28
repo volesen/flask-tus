@@ -1,8 +1,7 @@
-import datetime
 import os
 import uuid
-
 import mongoengine
+import datetime
 from flask import current_app
 
 from .base_model import BaseTusUpload
@@ -11,11 +10,13 @@ from ..utilities import get_extension
 
 
 class MongoengineUpload(mongoengine.Document, BaseTusUpload):
+    # TODO Add owner field
+    # owner = mongoengine.ReferenceField(User, required=False)
+    path = mongoengine.StringField()
     offset = mongoengine.IntField(default=0)
     length = mongoengine.IntField(required=True)
-    file_reference = mongoengine.StringField()  # Path to file in FS
-    created_on = mongoengine.DateTimeField(default=datetime.datetime.now)
     metadata = mongoengine.DictField()
+    created_on = mongoengine.DateTimeField(default=datetime.datetime.now)
 
     @classmethod
     def create(cls, upload_length, metadata=None):
@@ -28,7 +29,6 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
 
     @classmethod
     def get(cls, upload_id):
-        # Returns none if upload does not exist
         try:
             upload = cls.objects.get(pk=upload_id)
             return upload
@@ -40,11 +40,11 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
         return str(self.id)
 
     def append_chunk(self, chunk):
+        # Handle file and increment offset on every append
         file = self.file
         file.open(mode='ab')
         file.write(chunk)
         file.close()
-        # Increment offset
         self.modify(inc__offset=len(chunk))
 
     @property
@@ -60,7 +60,10 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
         return datetime.datetime.now() > self.expires
 
     def delete(self, *args, **kwargs):
-        # Delete file
+        # TODO Delete file
+        # REVIEW Lukasz Dynowski
+        # NOTE This is a dangerous assumption. What if you don't have permissions to delete file? or you no longer have access to storage?
+        # FIXME Use exceptions to handle unexpected behavior. If no error(s) is thrown then proceed with super(***).delete(****)
         FileSystem(self.file_reference).delete()
         super(MongoengineUpload, self).delete(*args, **kwargs)
 

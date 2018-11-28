@@ -43,6 +43,11 @@ $ python demo/app.py
 ```
 Go to [127.0.0.1:5000](http://127.0.0.1:5000) and upload a file. The uploaded file will end in `demo/uploads/`
 
+### Testing project
+```bash
+$ pytest -v tests/
+```
+
 ## Settings
 Settings are added in app.config:
 * `TUS_UPLOAD_URL` - Url of endpoint

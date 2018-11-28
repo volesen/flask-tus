@@ -1,6 +1,5 @@
-import filecmp
-
 import pytest
+import filecmp
 
 CHUNK_SIZE = 1024
 TEST_FILE = 'tests/data/flask.png'
