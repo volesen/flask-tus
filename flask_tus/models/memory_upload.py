@@ -16,7 +16,7 @@ class MemoryUpload(BaseTusUpload):
     created_on = datetime.datetime.now()
     offset = 0
 
-    def __init__(self, length=None, metadata=None):
+    def __init__(self, length, metadata):
         self.upload_id = str(uuid.uuid4())
 
         filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], self.upload_id)

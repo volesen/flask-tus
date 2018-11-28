@@ -20,7 +20,7 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
     created_on = mongoengine.DateTimeField(default=datetime.datetime.now)
 
     @classmethod
-    def create(cls, upload_length, metadata=None):
+    def create(cls, upload_length, metadata):
         filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
         if metadata and metadata.get('file_name'):
@@ -65,8 +65,13 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
         # REVIEW Lukasz Dynowski
         # NOTE This is a dangerous assumption. What if you don't have permissions to delete file? or you no longer have access to storage?
         # FIXME Use exceptions to handle unexpected behavior. If no error(s) is thrown then proceed with super(***).delete(****)
-        FileSystem(self.path).delete()
-        super(MongoengineUpload, self).delete(*args, **kwargs)
+        try:
+            FileSystem(self.path).delete()
+        except OSError:
+            # Handle exception
+            pass
+        else:
+            super(MongoengineUpload, self).delete(*args, **kwargs)
 
     @classmethod
     def delete_expired(cls):

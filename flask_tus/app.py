@@ -45,6 +45,7 @@ class FlaskTus(object):
             validate_post()
             upload_length = request.headers.get('Upload-Length')
             upload_metadata = request.headers.get('Upload-Metadata')
+
             if upload_metadata:
                 upload_metadata = extract_metadata(upload_metadata)
 
