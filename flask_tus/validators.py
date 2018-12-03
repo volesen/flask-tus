@@ -65,7 +65,7 @@ def validate_post():
         raise TusError(413)
 
 
-def validate_delete():
+def validate_delete(upload):
     # If the servers receives a HEAD request against a non-existent resource it SHOULD return a 404 Not Found status.
     if upload is None:
         raise TusError(404)
