@@ -6,6 +6,7 @@ import mongoengine
 from flask import current_app
 
 from .base_model import BaseTusUpload
+from ..exceptions import TusError
 from ..storage.file_system import FileSystem
 from ..utilities import get_extension
 
@@ -61,15 +62,11 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
         return datetime.datetime.now() > self.expires
 
     def delete(self, *args, **kwargs):
-        # TODO Delete file
-        # REVIEW Lukasz Dynowski
-        # NOTE This is a dangerous assumption. What if you don't have permissions to delete file? or you no longer have access to storage?
-        # FIXME Use exceptions to handle unexpected behavior. If no error(s) is thrown then proceed with super(***).delete(****)
+        # On unsuccessful deletion raise "500 Internal Server Error"
         try:
             FileSystem(self.path).delete()
         except OSError:
-            # Handle exception
-            pass
+            raise TusError(500)
         else:
             super(MongoengineUpload, self).delete(*args, **kwargs)
 
