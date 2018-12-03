@@ -1,15 +1,9 @@
 import pytest
 
 from flask_tus.models.base_model import BaseTusUpload
-from flask_tus.models.memory_upload import MemoryUpload
 from flask_tus.storage.base_file import BaseFile
 
-# from flask_tus.models.mongoengine_upload import MongoengineUpload
 
-models = (MemoryUpload)
-
-
-# @pytest.mark.parametrize("model", models)
 @pytest.mark.usefixtures('class_client')
 class TestModels:
     # TODO: Parametrize so it can test over collection of models

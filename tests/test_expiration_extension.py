@@ -9,7 +9,7 @@ class TestResponses(object):
         # Create initial upload
         post_response = self.client.post('/files/', headers={'Tus-Version': '1.0.0', 'Upload-Length': '1000'})
         resource_url = post_response.headers['Location']
-        resource_id = resource_url.split('/')[-1]
+
         self.app.config['TUS_TIMEDELTA'] = datetime.timedelta(days=-1)
         patch_response = self.client.patch(resource_url, headers={'Tus-Version': '1.0.0', 'Content-Length': '1000',
                                                                   'Upload-Offset': '0'})

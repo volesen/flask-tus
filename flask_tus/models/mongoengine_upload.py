@@ -16,7 +16,7 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
     # owner = mongoengine.ReferenceField(User, required=False)
     path = mongoengine.StringField()
     offset = mongoengine.IntField(default=0)
-    length = mongoengine.IntField(required=True)
+    length = mongoengine.IntField()
     metadata = mongoengine.DictField()
     created_on = mongoengine.DateTimeField(default=datetime.datetime.now)
 
@@ -27,6 +27,9 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
         if metadata and metadata.get('file_name'):
             filename = filename + '.' + get_extension(metadata.get('file_name'))
 
+        if upload_length:
+            upload_length = int(upload_length)
+
         return cls.objects.create(length=upload_length, path=filename, metadata=metadata)
 
     @classmethod
@@ -34,7 +37,8 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
         try:
             upload = cls.objects.get(pk=upload_id)
             return upload
-        except mongoengine.DoesNotExist:
+        except (mongoengine.DoesNotExist, mongoengine.errors.ValidationError):
+            # If object_id is not valid or resource does not exist
             return None
 
     @property
@@ -43,6 +47,7 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
 
     def append_chunk(self, chunk):
         # Handle file and increment offset on every append
+        current_app.flask_tus.pre_save()
         try:
             file = self.file
             file.open(mode='ab')
