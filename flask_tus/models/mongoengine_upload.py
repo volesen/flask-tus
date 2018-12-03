@@ -43,11 +43,16 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
 
     def append_chunk(self, chunk):
         # Handle file and increment offset on every append
-        file = self.file
-        file.open(mode='ab')
-        file.write(chunk)
-        file.close()
-        self.modify(inc__offset=len(chunk))
+        try:
+            file = self.file
+            file.open(mode='ab')
+            file.write(chunk)
+            file.close()
+        except OSError:
+            raise TusError(500)
+        else:
+            self.modify(inc__offset=len(chunk))
+            current_app.flask_tus.post_save()
 
     @property
     def file(self):

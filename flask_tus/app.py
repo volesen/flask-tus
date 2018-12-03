@@ -31,7 +31,7 @@ class FlaskTus(object):
         app.register_error_handler(TusError, TusError.error_handler)
         app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload_resource', self.create_upload_resource,
                          methods=['OPTIONS', 'POST'])
-        app.add_url_rule('{}<upload_id>'.format(app.config['TUS_UPLOAD_URL']), 'upload_resource', self.upload_resource,
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>', 'upload_resource', self.upload_resource,
                          methods=['HEAD', 'PATCH'])
         app.flask_tus = self
 
@@ -41,6 +41,8 @@ class FlaskTus(object):
             return option_response()
 
         # Crate a resource
+        self.on_create()
+
         if request.method == 'POST':
             validate_post()
             upload_length = request.headers.get('Upload-Length')
@@ -68,11 +70,30 @@ class FlaskTus(object):
             chunk = request.data
             upload.append_chunk(chunk)
 
+            if upload.offset == int(upload.length):
+                self.on_complete()
+
             return patch_response(upload)
 
         if request.method == 'DELETE':
-            validate_delete()
+            validate_delete(upload)
 
             upload.delete()
 
             return delete_response()
+
+    def pre_save(self):
+        # Callback for pre-save on each chunk
+        return
+
+    def post_save(self):
+        # Callback for post-save on each chunk
+        return
+
+    def on_create(self):
+        # Callback for creation of upload
+        return
+
+    def on_complete(self):
+        # Callback for completion of upload
+        return

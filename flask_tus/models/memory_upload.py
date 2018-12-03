@@ -5,6 +5,7 @@ import uuid
 from flask import current_app
 
 from .base_model import BaseTusUpload
+from ..exceptions import TusError
 from ..storage.file_system import FileSystem
 from ..utilities import get_extension
 
@@ -30,10 +31,16 @@ class MemoryUpload(BaseTusUpload):
         self.__class__.objects[self.upload_id] = self
 
     def append_chunk(self, chunk):
-        self.file.open(mode='ab')
-        self.file.write(chunk)
-        self.file.close()
-        self.offset += len(chunk)
+        current_app.flask_tus.pre_save()
+        try:
+            self.file.open(mode='ab')
+            self.file.write(chunk)
+            self.file.close()
+        except OSError:
+            raise TusError(500)
+        else:
+            self.offset += len(chunk)
+            current_app.flask_tus.post_save()
 
     @classmethod
     def get(cls, upload_id):
@@ -52,8 +59,12 @@ class MemoryUpload(BaseTusUpload):
         return datetime.datetime.now() > self.expires
 
     def delete(self):
-        self.file.delete()
-        del self.__class__.objects[self.upload_id]
+        try:
+            self.file.delete()
+        except OSError:
+            raise TusError(500)
+        else:
+            del self.__class__.objects[self.upload_id]
 
     @classmethod
     def delete_expired(cls):
