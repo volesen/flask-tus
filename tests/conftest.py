@@ -1,20 +1,14 @@
 import pytest
-
 from flask import Flask
+
 from flask_tus import FlaskTus
-from datetime import timedelta
-from tempfile import mkdtemp
+from .config import MemoryUploadConfig
 
 
-def create_app():
+def create_app(config):
     app = Flask(__name__)
-    app.config.update({
-        'TESTING': True,
-        'TUS_UPLOAD_DIR': mkdtemp(),
-        'TUS_UPLOAD_VIEW': '/files/',
-        'TUS_MAX_SIZE': 2 ** 32,  # 4 gigabytes
-        'TUS_TIMEDELTA': timedelta(days=1)
-    })
+
+    app.config.from_object(config)
 
     flask_tus = FlaskTus()
     flask_tus.init_app(app)
@@ -22,19 +16,8 @@ def create_app():
     return app, flask_tus
 
 
-@pytest.fixture
-def app():
-    app, flask_tus = create_app()
-    return app
-
-
-@pytest.fixture
-def client(app):
-    return app.test_client()
-
-
 @pytest.fixture(scope='class')
 def class_client(request):
-    request.cls.app, request.cls.flask_tus = create_app()
+    request.cls.app, request.cls.flask_tus = create_app(MemoryUploadConfig)
     request.cls.client = request.cls.app.test_client()
     yield
