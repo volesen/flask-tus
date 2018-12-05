@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 flask = "==1.0.2"
 pytest = "==3.10.1"
+mongomock = "*"
 
 [dev-packages]
 

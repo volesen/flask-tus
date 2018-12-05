@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "76de63ef6af111fec82fdfdbb6b273dc6421643f4f612a21e053ea4508435ea0"
+            "sha256": "f952b5d4e64933e55b087c115d87dfe62e72c4855d714751126ef3f50b7f0872"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -36,6 +36,14 @@
                 "sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"
             ],
             "version": "==7.0"
+        },
+        "colorama": {
+            "hashes": [
+                "sha256:05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d",
+                "sha256:f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48"
+            ],
+            "markers": "sys_platform == 'win32'",
+            "version": "==0.4.1"
         },
         "flask": {
             "hashes": [
@@ -92,6 +100,13 @@
             ],
             "version": "==1.1.0"
         },
+        "mongomock": {
+            "hashes": [
+                "sha256:1682467f479c017b3e27b223e0c3d115cfc3cbd6a69bfc87968a06003ade9441"
+            ],
+            "index": "pypi",
+            "version": "==3.14.0"
+        },
         "more-itertools": {
             "hashes": [
                 "sha256:c187a73da93e7a8acc0001572aebc7e3c69daf7bf6881a2cea10650bd4420092",
@@ -99,14 +114,6 @@
                 "sha256:fcbfeaea0be121980e15bc97b3817b5202ca73d0eae185b4550cbfce2a3ebb3d"
             ],
             "version": "==4.3.0"
-        },
-        "pathlib2": {
-            "hashes": [
-                "sha256:8eb170f8d0d61825e09a95b38be068299ddeda82f35e96c3301a8a5e7604cb83",
-                "sha256:d1aa2a11ba7b8f7b21ab852b1fb5afb277e1bb99d5dfc663380b5015c0d80c5a"
-            ],
-            "markers": "python_version < '3.6'",
-            "version": "==2.3.2"
         },
         "pluggy": {
             "hashes": [
@@ -129,6 +136,12 @@
             ],
             "index": "pypi",
             "version": "==3.10.1"
+        },
+        "sentinels": {
+            "hashes": [
+                "sha256:7be0704d7fe1925e397e92d18669ace2f619c92b5d4eb21a89f31e026f9ff4b1"
+            ],
+            "version": "==1.0.0"
         },
         "six": {
             "hashes": [
