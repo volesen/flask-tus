@@ -70,6 +70,10 @@ def option_response():
     response.headers['Tus-Extensions'] = SUPPORTED_EXTENSIONS
     response.headers['Tus-Checksum-Algorithm'] = SUPPORTED_ALGORITHMS
 
+    if current_app.config.get('TUS_OPTIONS'):
+        for header, value in current_app.config['TUS_OPTIONS'].items():
+            response.headers[header] = value
+
     return response
 
 
