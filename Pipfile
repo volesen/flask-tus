@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "==1.0.2"
-pytest = "==3.10.1"
-mongomock = "*"
+flask = ">=1.0.2"
+pytest = ">=3.10.1"
+mongomock = ">=3.14.0"
 
 [dev-packages]
 
 [requires]
-python_version = "3.5"
+python_version = ">=3.5"

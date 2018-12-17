@@ -1,6 +1,6 @@
 from flask import make_response, current_app
 
-from .constants import SUPPORTED_ALGORITHMS, SUPPORTED_EXTENSIONS
+from .constants import SUPPORTED_ALGORITHMS, SUPPORTED_TUS_EXTENSIONS
 from .utilities import format_date
 
 
@@ -67,7 +67,7 @@ def option_response():
     # A successful response indicated by the 204 No Content or 200 OK status MUST contain the Tus-Version header.
     # It MAY include the Tus-Extension and Tus-Max-Size headers.
     response = make_base_response(204)
-    response.headers['Tus-Extensions'] = SUPPORTED_EXTENSIONS
+    response.headers['Tus-Extensions'] = SUPPORTED_TUS_EXTENSIONS
     response.headers['Tus-Checksum-Algorithm'] = SUPPORTED_ALGORITHMS
 
     if current_app.config.get('TUS_OPTIONS'):

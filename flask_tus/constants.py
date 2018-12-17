@@ -1,2 +1,2 @@
-SUPPORTED_ALGORITHMS = {'md5', 'sha1'}
-SUPPORTED_EXTENSIONS = 'creation,expiration,checksum'
+SUPPORTED_ALGORITHMS = set(('md5', 'sha1'))
+SUPPORTED_TUS_EXTENSIONS = 'creation,expiration,checksum'

@@ -1,8 +1,7 @@
-import datetime
 import os
+import datetime
 
 from flask import Flask, render_template
-
 from flask_tus import FlaskTus
 from flask_tus.models.mongoengine_upload import MongoengineUpload
 
@@ -27,18 +26,6 @@ flask_tus = FlaskTus(app, model=MongoengineUpload)
 @app.route('/')
 def index():
     return render_template("index.html")
-
-
-@app.route('/delete/<upload_id>/')
-def delete(upload_id):
-    flask_tus.model.get(upload_id).delete()
-    return 'Test '
-
-
-@app.route('/expire/<upload_id>/')
-def test(upload_id):
-    flask_tus.model.get(upload_id).delete()
-    return 'Test '
 
 
 if __name__ == '__main__':

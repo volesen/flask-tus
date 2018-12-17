@@ -3,6 +3,7 @@
 *.pyo
 *.log
 *.lock
+Pipfile.lock
 
 # ignore below directories
 .pytest_cache/

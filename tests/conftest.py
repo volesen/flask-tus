@@ -1,6 +1,6 @@
 import pytest
-from flask import Flask
 
+from flask import Flask
 from flask_tus import FlaskTus
 from .config import MemoryUploadConfig, MongoUploadConfig
 

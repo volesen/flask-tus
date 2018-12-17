@@ -1,7 +1,6 @@
 import hashlib
 
 from flask import request, current_app
-
 from flask_tus.constants import SUPPORTED_ALGORITHMS
 from flask_tus.exceptions import TusError
 from flask_tus.utilities import extract_checksum
@@ -69,8 +68,8 @@ def validate_delete(upload):
     # If the servers receives a HEAD request against a non-existent resource it SHOULD return a 404 Not Found status.
     if upload is None:
         raise TusError(404)
-    # Check if termination-extension is used
 
+    # Check if termination-extension is used
     if 'termination' not in current_app.config['TUS_EXTENSION']:
         raise TusError(404)
 

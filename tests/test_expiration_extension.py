@@ -1,18 +1,18 @@
-import datetime
-
 import pytest
+import datetime
 
 
 @pytest.mark.usefixtures('class_client')
 class TestResponses(object):
     def test_expired_upload(self):
         # Create initial upload
-        post_response = self.client.post('/files/', headers={'Tus-Version': '1.0.0', 'Upload-Length': '1000'})
+        headers = {'Tus-Version': '1.0.0', 'Upload-Length': '1000'}
+        post_response = self.client.post('/files/', headers=headers)
         resource_url = post_response.headers['Location']
 
         self.app.config['TUS_TIMEDELTA'] = datetime.timedelta(days=-1)
-        patch_response = self.client.patch(resource_url, headers={'Tus-Version': '1.0.0', 'Content-Length': '1000',
-                                                                  'Upload-Offset': '0'})
+        headers = {'Tus-Version': '1.0.0', 'Content-Length': '1000', 'Upload-Offset': '0'}
+        patch_response = self.client.patch(resource_url, headers=headers)
         # Assert 410 gone as resource should be expired
         assert patch_response.status_code == 410
 
@@ -28,7 +28,7 @@ class TestResponses(object):
             self.flask_tus.model.get(resource_id).created_on -= self.app.config['TUS_TIMEDELTA']
             self.flask_tus.model.delete_expired()
 
-        patch_response = self.client.patch(resource_url, headers={'Tus-Version': '1.0.0', 'Content-Length': '1000',
-                                                                  'Upload-Offset': '0'})
+        headers = {'Tus-Version': '1.0.0', 'Content-Length': '1000', 'Upload-Offset': '0'}
+        patch_response = self.client.patch(resource_url, headers=headers)
         # Assert 404 Not Found, as resource should be deleted
         assert patch_response.status_code == 404

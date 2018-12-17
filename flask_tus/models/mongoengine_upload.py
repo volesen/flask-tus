@@ -1,9 +1,15 @@
-import datetime
 import os
 import uuid
+import datetime
 
-import mongoengine
 from flask import current_app
+from mongoengine import IntField
+from mongoengine import Document
+from mongoengine import DictField
+from mongoengine import StringField
+from mongoengine import DateTimeField
+from mongoengine import DoesNotExist
+from mongoengine.errors import ValidationError
 
 from .base_model import BaseTusUpload
 from ..exceptions import TusError
@@ -11,33 +17,33 @@ from ..storage.file_system import FileSystem
 from ..utilities import get_extension
 
 
-class MongoengineUpload(mongoengine.Document, BaseTusUpload):
+class MongoengineUpload(Document, BaseTusUpload):
     # TODO Add owner field
     # owner = mongoengine.ReferenceField(User, required=False)
-    path = mongoengine.StringField()
-    offset = mongoengine.IntField(default=0)
-    length = mongoengine.IntField()
-    metadata = mongoengine.DictField()
-    created_on = mongoengine.DateTimeField(default=datetime.datetime.now)
+    file_path = StringField()
+    offset = IntField(default=0)
+    length = IntField()
+    metadata = DictField()
+    created_on = DateTimeField(default=datetime.datetime.now)
 
     @classmethod
     def create(cls, upload_length, metadata):
-        filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
+        self.file_path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
         if metadata and metadata.get('file_name'):
-            filename = filename + '.' + get_extension(metadata.get('file_name'))
+            self.file_path += '.' + get_extension(metadata.get('file_name'))
 
         if upload_length:
             upload_length = int(upload_length)
 
-        return cls.objects.create(length=upload_length, path=filename, metadata=metadata)
+        return cls.objects.create(length=upload_length, file_path=self.file_path, metadata=metadata)
 
     @classmethod
     def get(cls, upload_id):
         try:
             upload = cls.objects.get(pk=upload_id)
             return upload
-        except (mongoengine.DoesNotExist, mongoengine.errors.ValidationError):
+        except (DoesNotExist, ValidationError):
             # If object_id is not valid or resource does not exist
             return None
 
@@ -61,7 +67,7 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
 
     @property
     def file(self):
-        return FileSystem(self.path)
+        return FileSystem(self.file_path)
 
     @property
     def expires(self):
@@ -74,7 +80,7 @@ class MongoengineUpload(mongoengine.Document, BaseTusUpload):
     def delete(self, *args, **kwargs):
         # On unsuccessful deletion raise "500 Internal Server Error"
         try:
-            FileSystem(self.path).delete()
+            FileSystem(self.file_path).delete()
         except OSError:
             raise TusError(500)
         else:

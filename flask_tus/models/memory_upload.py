@@ -1,6 +1,6 @@
-import datetime
 import os
 import uuid
+import datetime
 
 from flask import current_app
 
@@ -20,14 +20,16 @@ class MemoryUpload(BaseTusUpload):
     def __init__(self, length, metadata):
         self.upload_id = str(uuid.uuid4())
 
-        filename = os.path.join(current_app.config['TUS_UPLOAD_DIR'], self.upload_id)
-
+        file_path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], self.upload_id)
         if metadata and metadata.get('file_name'):
-            filename = filename + '.' + get_extension(metadata.get('file_name'))
+            file_path += '.' + get_extension(metadata.get('file_name'))
 
-        self.file = FileSystem(filename)
+        self.file = FileSystem(file_path)
+        self.file_path = file_path
         self.length = length
         self.metadata = metadata
+
+        # HACK Tricky!
         self.__class__.objects[self.upload_id] = self
 
     def append_chunk(self, chunk):
@@ -48,6 +50,7 @@ class MemoryUpload(BaseTusUpload):
 
     @classmethod
     def create(cls, upload_length, metadata):
+        """ Factory method"""
         return cls(length=upload_length, metadata=metadata)
 
     @property

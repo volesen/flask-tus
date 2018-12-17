@@ -1,7 +1,5 @@
-from tempfile import mkdtemp
-
 from flask import request
-
+from tempfile import mkdtemp
 from flask_tus.exceptions import TusError
 from flask_tus.models.memory_upload import MemoryUpload
 from flask_tus.models.mongoengine_upload import MongoengineUpload
@@ -29,21 +27,22 @@ class FlaskTus(object):
         app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.register_error_handler(TusError, TusError.error_handler)
-        app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload_resource', self.create_upload_resource,
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload', self.create_upload,
                          methods=['OPTIONS', 'POST'])
-        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>', 'upload_resource', self.upload_resource,
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>', 'modify_upload', self.modify_upload,
                          methods=['HEAD', 'PATCH'])
         app.flask_tus = self
 
-    def create_upload_resource(self):
+    def create_upload(self):
         # Get server configuration
         if request.method == 'OPTIONS':
             return option_response()
 
-        # Crate a resource
-        self.on_create()
-
         if request.method == 'POST':
+
+            # Crate a resource callback
+            self.on_create()
+
             validate_post()
             upload_length = request.headers.get('Upload-Length')
             upload_metadata = request.headers.get('Upload-Metadata')
@@ -55,7 +54,7 @@ class FlaskTus(object):
 
             return post_response(upload)
 
-    def upload_resource(self, upload_id):
+    def modify_upload(self, upload_id):
         upload = self.model.get(upload_id)
 
         # Get state of a resource
@@ -82,18 +81,18 @@ class FlaskTus(object):
 
             return delete_response()
 
+    def on_create(self):
+        # Callback for creation of upload
+        pass
+
     def pre_save(self):
         # Callback for pre-save on each chunk
-        return
+        pass
 
     def post_save(self):
         # Callback for post-save on each chunk
-        return
-
-    def on_create(self):
-        # Callback for creation of upload
-        return
+        pass
 
     def on_complete(self):
         # Callback for completion of upload
-        return
+        pass

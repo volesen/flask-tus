@@ -16,14 +16,14 @@ class TestCallbacks(object):
     def __read_chunks(file, chunk_size):
         return iter(lambda: file.read(chunk_size), b'')
 
+    def _on_create(self):
+        self.created = True
+
     def _pre_save(self):
         self.pre_saves += 1
 
     def _post_save(self):
         self.post_saves += 1
-
-    def _on_create(self):
-        self.created = True
 
     def _on_complete(self):
         self.completed = True
