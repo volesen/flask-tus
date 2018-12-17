@@ -1,5 +1,6 @@
-from flask import request
 from tempfile import mkdtemp
+from flask import request
+from flask_cors import CORS, cross_origin
 from flask_tus.exceptions import TusError
 from flask_tus.models.memory_upload import MemoryUpload
 from flask_tus.models.mongoengine_upload import MongoengineUpload
@@ -14,36 +15,40 @@ class FlaskTus(object):
 
     def __init__(self, app=None, model=MemoryUpload):
 
-        if str(model.__class__) == "<class 'flask_mongoengine.MongoEngine'>":
-            model = MongoengineUpload
-
         if app:
             self.app = app
             self.init_app(app, model)
+            CORS(self.app)
 
     # Application factory
     def init_app(self, app, model=MemoryUpload):
-        self.model = model
         app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
+        app.config.setdefault('TUS_COLLECTION_NAME', 'files')
+
+        if str(model.__class__) == "<class 'flask_mongoengine.MongoEngine'>":
+            self.model = MongoengineUpload
+        else:
+            self.model = model
+
         app.register_error_handler(TusError, TusError.error_handler)
-        app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload', self.create_upload,
-                         methods=['OPTIONS', 'POST'])
-        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>', 'modify_upload', self.modify_upload,
-                         methods=['HEAD', 'PATCH'])
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload', self.create_upload, methods=['OPTIONS', 'POST'])
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_i>', 'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
+
         app.flask_tus = self
 
+    @cross_origin()
     def create_upload(self):
         # Get server configuration
         if request.method == 'OPTIONS':
             return option_response()
 
         if request.method == 'POST':
+            validate_post()
 
             # Crate a resource callback
             self.on_create()
 
-            validate_post()
             upload_length = request.headers.get('Upload-Length')
             upload_metadata = request.headers.get('Upload-Metadata')
 
@@ -54,6 +59,7 @@ class FlaskTus(object):
 
             return post_response(upload)
 
+    @cross_origin()
     def modify_upload(self, upload_id):
         upload = self.model.get(upload_id)
 

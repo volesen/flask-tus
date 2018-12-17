@@ -15,7 +15,7 @@
     input.addEventListener("change", function (e) {
         // Get the selected file from the input element
         var file = e.target.files[0];
-        console.log('xxxxx', file.name);
+        console.log('xxxxx', file);
 
         // Create a new tus upload
         var upload = new tus.Upload(file, {
