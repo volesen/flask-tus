@@ -33,7 +33,7 @@ class FlaskTus(object):
 
         app.register_error_handler(TusError, TusError.error_handler)
         app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload', self.create_upload, methods=['OPTIONS', 'POST'])
-        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_i>', 'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>', 'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
 
         app.flask_tus = self
 
