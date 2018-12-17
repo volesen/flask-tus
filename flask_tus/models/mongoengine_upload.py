@@ -28,15 +28,15 @@ class MongoengineUpload(Document, BaseTusUpload):
 
     @classmethod
     def create(cls, upload_length, metadata):
-        self.file_path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
+        file_path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
         if metadata and metadata.get('file_name'):
-            self.file_path += '.' + get_extension(metadata.get('file_name'))
+            file_path += '.' + get_extension(metadata.get('file_name'))
 
         if upload_length:
             upload_length = int(upload_length)
 
-        return cls.objects.create(length=upload_length, file_path=self.file_path, metadata=metadata)
+        return cls.objects.create(length=upload_length, file_path=file_path, metadata=metadata)
 
     @classmethod
     def get(cls, upload_id):
