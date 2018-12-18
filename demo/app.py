@@ -26,7 +26,6 @@ app.config['MONGODB_SETTINGS'] = {
 
 mongodb = MongoEngine(app)
 flask_tus = FlaskTus(app, model=MongoengineUpload)
-
 # flask_tus = FlaskTus(app, model=MongoengineUploadExtended)
 
 

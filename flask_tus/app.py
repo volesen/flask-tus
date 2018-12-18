@@ -1,6 +1,5 @@
 from tempfile import mkdtemp
 from flask import request
-from flask_cors import CORS, cross_origin
 from flask_tus.exceptions import TusError
 from flask_tus.models.memory_upload import MemoryUpload
 from flask_tus.models.mongoengine_upload import MongoengineUpload
@@ -18,7 +17,6 @@ class FlaskTus(object):
         if app:
             self.app = app
             self.init_app(app, model)
-            CORS(self.app)
 
     # Application factory
     def init_app(self, app, model=MemoryUpload):
@@ -37,7 +35,6 @@ class FlaskTus(object):
 
         app.flask_tus = self
 
-    @cross_origin()
     def create_upload(self):
         # Get server configuration
         if request.method == 'OPTIONS':
@@ -59,7 +56,6 @@ class FlaskTus(object):
 
             return post_response(upload)
 
-    @cross_origin()
     def modify_upload(self, upload_id):
         upload = self.model.get(upload_id)
 
