@@ -5,6 +5,8 @@ from mongoengine import StringField
 from flask_mongoengine import MongoEngine
 from flask import Flask, render_template
 from flask_tus import FlaskTus
+from flask_tus.models import MongoengineUpload
+
 
 app = Flask(__name__)
 app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/storage/uploads'
