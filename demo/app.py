@@ -21,8 +21,7 @@ app.config['MONGODB_SETTINGS'] = {
 
 # TODO find the way to extend model and execute callbacks
 # class MongoengineUploadExtended(MongoengineUpload):
-#     xxx = StringField()
-
+#     xxxx = StringField()
 
 mongodb = MongoEngine(app)
 flask_tus = FlaskTus(app, model=MongoengineUpload)

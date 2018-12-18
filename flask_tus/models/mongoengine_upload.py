@@ -65,12 +65,12 @@ class MongoengineUpload(Document, BaseTusUpload):
         # Handle file and increment offset on every append
         current_app.flask_tus.pre_save()
         try:
-            file = self.file
-            file.open(mode='ab')
-            file.write(chunk)
-            file.close()
-        except OSError:
-            raise TusError(500)
+            with self.file.open(mode='ab') as file:
+                file.write(chunk)
+        # except OSError:
+        except Exception as error:
+            raise TusError(503, str(error))
+            # raise TusError(503, 'MongoUpload- Failed to append to a file.')
         else:
             self.modify(inc__offset=len(chunk))
             current_app.flask_tus.post_save()

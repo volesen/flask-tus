@@ -35,11 +35,10 @@ class MemoryUpload(BaseTusUpload):
     def append_chunk(self, chunk):
         current_app.flask_tus.pre_save()
         try:
-            self.file.open(mode='ab')
-            self.file.write(chunk)
-            self.file.close()
-        except OSError:
-            raise TusError(500)
+            with self.file.open(mode='ab') as file:
+                file.write(chunk)
+        except Exception as error:
+            raise TusError(500, str(error))
         else:
             self.offset += len(chunk)
             current_app.flask_tus.post_save()
