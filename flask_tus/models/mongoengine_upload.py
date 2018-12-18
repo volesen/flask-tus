@@ -46,6 +46,7 @@ class MongoengineUpload(Document, BaseTusUpload):
         if length:
             length = int(length)
 
+        # TODO Replace all alike code with repository calls
         return cls.objects.create(length=length, path=path, file_name=file_name, metadata=metadata)
 
     @classmethod
@@ -69,7 +70,7 @@ class MongoengineUpload(Document, BaseTusUpload):
                 file.write(chunk)
         # except OSError:
         except Exception as error:
-            raise TusError(503, str(error))
+            raise TusError(503, str(error), 'APIError')
             # raise TusError(503, 'MongoUpload- Failed to append to a file.')
         else:
             self.modify(inc__offset=len(chunk))

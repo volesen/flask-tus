@@ -4,10 +4,10 @@ from .utilities import format_date
 from .constants import SUPPORTED_ALGORITHMS, SUPPORTED_TUS_EXTENSIONS
 
 
-def make_base_response(status_code):
+def make_base_response(status_code, body=''):
     # If this was inherited from flask.Response changing the response_class for the app object (eg. for custom
     # headers or CSRF tokens), would not affect TUS-responses, thus this pattern
-    response = make_response('', status_code)
+    response = make_response(body, status_code)
     response.headers['Tus-Version'] = '1.0.0'
     response.headers['Tus-Resumable'] = '1.0.0'
     response.headers['Tus-Max-Size'] = current_app.config['TUS_MAX_SIZE']
