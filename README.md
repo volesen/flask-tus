@@ -82,7 +82,7 @@ class FlaskTusExtended(FlaskTus):
         print('Succesful upload')
 ```
 
-The callbacks are as follwing:
+The callbacks are as follows:
 * `FlaskTus.on_create` - Callback for creation of upload
 * `FlaskTus.pre_save` - Callback for pre-save on each chunk
 * `FlaskTus.post_save` - Callback for post-save on each chunk
