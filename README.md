@@ -72,3 +72,18 @@ def create_app(config):
 
   return app
 ```
+## Extending
+The extensions can be extending in terms of callbacks and model, as in the following examples
+```python 
+from flask_tus import FlaskTus
+
+class FlaskTusExtended(FlaskTus):
+	def on_complete(self):
+		print('Succesful upload')
+```
+
+The callbacks are as follwing:
+* `FlaskTus.on_create` - Callback for creation of upload
+* `FlaskTus.pre_save` - Callback for pre-save on each chunk
+* `FlaskTus.post_save` - Callback for post-save on each chunk
+* `FlaskTus.on_complete` - Callback for completion of upload
