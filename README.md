@@ -78,8 +78,8 @@ The extensions can be extending in terms of callbacks and model, as in the follo
 from flask_tus import FlaskTus
 
 class FlaskTusExtended(FlaskTus):
-	def on_complete(self):
-		print('Succesful upload')
+    def on_complete(self):
+        print('Succesful upload')
 ```
 
 The callbacks are as follwing:
