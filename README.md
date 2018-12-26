@@ -47,7 +47,7 @@ Go to [127.0.0.1:5000](http://127.0.0.1:5000) and upload a file. The uploaded fi
 ```bash
 $ pytest -v tests/
 ```
-
+# Usage
 ## Settings
 Settings are added in app.config:
 * `TUS_UPLOAD_URL` - Url of endpoint
