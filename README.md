@@ -16,8 +16,7 @@ $ git clone https://github.com/volesen/flask-tus.git
 $ cd flask-tus
 # pipenv --python $(which python3) install
 $ pipenv --python /path/to/python3 install
-$ pipenv --python /path/to/python3 shell
-$ ./setup.py install
+$ pipenv shell
 ```
 
 ### virtualenviroment
