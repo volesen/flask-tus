@@ -33,10 +33,12 @@ class MongoengineUpload(Document, BaseTusUpload):
         'collection': 'files',
         'allow_inheritance': True
     }
-
+    
     @classmethod
     def create(cls, length, metadata):
         path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
+
+        file_name = ''
 
         if metadata and metadata.get('file_name'):
             file_name = metadata.get('file_name')

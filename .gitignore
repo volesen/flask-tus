@@ -12,3 +12,4 @@ flask_tus.egg-info/
 build/
 venv/
 __pycache__/
+.vscode/
