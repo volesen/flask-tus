@@ -86,3 +86,20 @@ The callbacks are as follows:
 * `FlaskTus.pre_save` - Callback for pre-save on each chunk
 * `FlaskTus.post_save` - Callback for post-save on each chunk
 * `FlaskTus.on_complete` - Callback for completion of upload
+* `FlaskTus.pre_delete` - Callback for pre-delete of upload
+* `FlaskTus.post_delete` - Callback for post-delete of upload
+
+Model can be extended by inheriting the base models:
+```python 
+rom flask_tus.models import MongoUpload
+from mongoengine import StringField
+
+class CustomModel(MongoUpload)
+  owner = StringField()
+    
+  @classmethod
+  def create(cls, upload_length, metadata, owner):
+      """ Factory method"""
+      return cls(length=upload_length, metadata=metadata, owner = owner)
+```
+
