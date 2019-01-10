@@ -9,6 +9,7 @@ from flask_tus.models import MongoengineUpload
 
 
 app = Flask(__name__)
+
 app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/storage/uploads'
 app.config['TUS_UPLOAD_URL'] = '/files/'
 app.config['TUS_MAX_SIZE'] = 2 ** 32  # 4GB
