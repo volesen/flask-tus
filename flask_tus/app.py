@@ -105,3 +105,11 @@ class FlaskTus(object):
     def on_complete(self):
         # Callback for completion of upload
         pass
+
+    def pre_delete(self):
+        # Callback for pre-delete of upload
+        pass
+
+    def post_delete(self):
+        # Callback for post-delete of upload
+        pass

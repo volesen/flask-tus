@@ -61,11 +61,14 @@ class MemoryUpload(BaseTusUpload):
         return datetime.datetime.now() > self.expires
 
     def delete(self):
+        current_app.flask_tus.pre_delete()
+
         try:
             self.file.delete()
         except OSError:
             raise TusError(500)
         else:
+            current_app.flask_tus.post_delete()
             del self.__class__.objects[self.upload_id]
 
     @classmethod

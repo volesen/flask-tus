@@ -30,6 +30,7 @@ class MongoengineUpload(Document, BaseTusUpload):
         'collection': 'files',
         'allow_inheritance': True
     }
+    
     @classmethod
     def create(cls, length, metadata):
         path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
@@ -89,12 +90,15 @@ class MongoengineUpload(Document, BaseTusUpload):
 
     def delete(self, *args, **kwargs):
         # On unsuccessful deletion raise "500 Internal Server Error"
+        current_app.flask_tus.pre_delete()
         try:
             FileSystem(self.path).delete()
         except OSError:
             raise TusError(500)
         else:
             super(MongoengineUpload, self).delete(*args, **kwargs)
+            current_app.flask_tus.post_delete()
+
 
     @classmethod
     def delete_expired(cls):
