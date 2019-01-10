@@ -3,8 +3,8 @@ import uuid
 import datetime
 
 from flask import current_app
-from mongoengine import IntField
 from mongoengine import Document
+from mongoengine import IntField
 from mongoengine import DictField
 from mongoengine import StringField
 from mongoengine import DateTimeField
@@ -18,8 +18,6 @@ from ..utilities import get_extension
 
 
 class MongoengineUpload(Document, BaseTusUpload):
-    # TODO Add owner field
-    # owner = mongoengine.ReferenceField(User, required=False)
     file_name = StringField()
     path = StringField()
     offset = IntField(default=0)
@@ -27,13 +25,11 @@ class MongoengineUpload(Document, BaseTusUpload):
     metadata = DictField()
     created_on = DateTimeField(default=datetime.datetime.now)
 
-    # TODO replace collection value with app.config['TUS_COLLECTION_NAME']
     meta = {
         'strict': False,
         'collection': 'files',
         'allow_inheritance': True
     }
-    
     @classmethod
     def create(cls, length, metadata):
         path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
@@ -75,6 +71,7 @@ class MongoengineUpload(Document, BaseTusUpload):
             raise TusError(503, str(error), 'APIError')
             # raise TusError(503, 'MongoUpload- Failed to append to a file.')
         else:
+            # Increment offset
             self.modify(inc__offset=len(chunk))
             current_app.flask_tus.post_save()
 
