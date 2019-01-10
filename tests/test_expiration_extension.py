@@ -29,6 +29,6 @@ class TestResponses(object):
             self.flask_tus.model.delete_expired()
 
         headers = {'Tus-Version': '1.0.0', 'Content-Length': '1000', 'Upload-Offset': '0'}
-        patch_response = self.client.patch(resource_url, headers=headers)
+        head_response = self.client.head(resource_url, headers=headers)
         # Assert 404 Not Found, as resource should be deleted
-        assert patch_response.status_code == 404
+        assert head_response.status_code == 404
