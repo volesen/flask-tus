@@ -22,10 +22,17 @@ class FlaskTus(object):
     def init_app(self, app, model=MemoryUpload):
         app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
-        app.config.setdefault('TUS_COLLECTION_NAME', 'files')
+        app.config.setdefault('TUS_COLLECTION_NAME', 'testingthis')
+
+        # TODO: We could check if the model inherits from MongoEngine Document
+        #       which would be cleaner and more concise. 
+        #       That would require import of MongoEngine which is unessescary
+        #       in many usecases
+        # HACK: This is changing the state of the model by accesing _meta
 
         if str(model.__class__) == "<class 'flask_mongoengine.MongoEngine'>":
             self.model = MongoengineUpload
+            self.model._meta['collection'] = app.config['TUS_COLLECTION_NAME']
         else:
             self.model = model
 
