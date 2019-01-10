@@ -20,14 +20,9 @@ app.config['MONGODB_SETTINGS'] = {
     'port': int(os.environ.get('DB_PORT', 27017)),
 }
 
-# TODO find the way to extend model and execute callbacks
-# class MongoengineUploadExtended(MongoengineUpload):
-#     xxxx = StringField()
 
 mongodb = MongoEngine(app)
-flask_tus = FlaskTus(app, model=MongoengineUpload)
-# flask_tus = FlaskTus(app, model=MongoengineUploadExtended)
-
+flask_tus = FlaskTus(app, model=mongodb)
 
 
 @app.route('/')
