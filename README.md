@@ -71,8 +71,7 @@ def create_app(config):
 
   return app
 ```
-For the MongoDB model, the collection will be named
-> uploads
+For the MongoDB model, the collection will be named `uploads`
 
 ## Extending
 The extensions can be extending in terms of callbacks and model, as in the following examples
