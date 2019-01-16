@@ -2,9 +2,9 @@ import pytest
 
 from flask import Flask
 from flask_tus import FlaskTus
-from .config import MemoryUploadConfig, MongoUploadConfig
+from .config import MemoryUploadConfig, MongoUploadConfig, CustomUploadConfig
 
-configs = (MemoryUploadConfig, MongoUploadConfig)
+configs = (MemoryUploadConfig, MongoUploadConfig, CustomUploadConfig)
 
 
 def create_app(config):
@@ -16,6 +16,16 @@ def create_app(config):
     flask_tus.init_app(app, model=app.config['UPLOAD_MODEL'])
 
     return app, flask_tus
+
+
+# TODO : Keep code DRY
+@pytest.fixture(scope='class', params=[CustomUploadConfig])
+def custom_client(request):
+    request.cls.app, request.cls.flask_tus = create_app(request.param)
+    request.param.init_db()
+    request.cls.client = request.cls.app.test_client()
+    yield
+    # Teardown here if needed
 
 
 @pytest.fixture(scope='class', params=configs)
