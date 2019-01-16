@@ -18,9 +18,8 @@ from ..utilities import get_extension
 
 
 class MongoengineBaseUpload(Document, BaseTusUpload):
-    # TODO change file_name to filename
     fingerprint = StringField()
-    file_name = StringField()
+    filename = StringField()
     path = StringField()
     offset = IntField(default=0)
     length = IntField()
@@ -39,18 +38,18 @@ class MongoengineBaseUpload(Document, BaseTusUpload):
     def create(cls, length, metadata):
         path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
-        file_name = ''
+        filename = ''
 
-        if metadata and metadata.get('file_name'):
-            file_name = metadata.get('file_name')
-            path += '.' + get_extension(file_name)
-            del metadata['file_name']
+        if metadata and metadata.get('filename'):
+            filename = metadata.get('filename')
+            path += '.' + get_extension(filename)
+            del metadata['filename']
 
         if length:
             length = int(length)
 
         # TODO Replace all alike code with repository calls
-        return cls.objects.create(length=length, path=path, file_name=file_name, metadata=metadata)
+        return cls.objects.create(length=length, path=path, filename=filename, metadata=metadata)
 
     @classmethod
     def get(cls, upload_id):

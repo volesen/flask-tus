@@ -5,7 +5,7 @@ class BaseTusUpload(object):
     offset = None
     file = None
     path = None
-    file_name = None
+    filename = None
     length = None
     metadata = None
 
