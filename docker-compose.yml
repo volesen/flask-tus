@@ -23,6 +23,8 @@ services:
     image: mongo:3.7.7
     restart: always
     container_name: tus_dev_mongo
+    ports:
+      - "27017:27017"
     environment:
       TZ: Europe/Copenhagen
     volumes:
