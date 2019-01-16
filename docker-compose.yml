@@ -17,7 +17,7 @@ services:
       DB_NAME: tus_dev
       DB_HOST: mongodb
       DB_PORT: 27017
-      FLASK_APP: /app/demo/app.py
+      FLASK_APP: /app/example/app.py
 
   mongodb:
     image: mongo:3.7.7
