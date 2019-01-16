@@ -5,8 +5,6 @@ from mongoengine import BooleanField
 
 from .mongoengine_base_upload import MongoengineBaseUpload
 
-# TODO : Find better name
-
 
 class MongoengineUpload(MongoengineBaseUpload):
     # TODO Add owner field
