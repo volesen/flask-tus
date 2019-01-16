@@ -5,6 +5,8 @@ from mongoengine import BooleanField
 
 from .mongoengine_upload import MongoengineUpload
 
+# TODO : Find better name
+
 
 class CustomUpload(MongoengineUpload):
     # TODO Add owner field
@@ -13,19 +15,26 @@ class CustomUpload(MongoengineUpload):
     valid = BooleanField()
     validation_error = StringField(default='')
 
+    # TODO: Review this - this could be added in utils.py as a helpher func as it is also used in tests
+    @staticmethod
+    def __read_chunks(file, chunk_size=1024):
+
+        return iter(lambda: file.read(chunk_size), b'')
+
     def append_chunk(self, chunk):
         # Append chunk and clear MD5 if set
-        super().append_chunk(self, chunk)
-        self.modify(unset__md5=1)
+        super().append_chunk(chunk)
+        self.modify(unset___md5=1)
 
     @property
     def md5(self):
-        if hasattr(self._md5, None) is None:
+        if self._md5 is None:
             md5 = hashlib.md5()
-            for chunk in self.file.chunks():
-                md5.update(chunk)
+            with self.file.open() as file:
+                for chunk in self.__read_chunks(file):
+                    md5.update(chunk)
 
-            # Set MD5 fied to digest      
-            self.modify(set___md5 = md5.hexdigest())
+            # Set MD5 fied to digest
+            self.modify(set___md5=md5.hexdigest())
 
         return self._md5
