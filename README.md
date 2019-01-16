@@ -60,21 +60,25 @@ Upload states are by default saved in memory, but can be saved persistently, as 
 ```python
 from flask import Flask
 from flask_tus import FlaskTus
-from flask_tus.models import mongoengine_upload
+from flask_tus.models import MongoengineUpload
 
 def create_app(config):
   app = Flask(__name__)  
   app.config.from_object(config)
 
-  flask_tus = FlaskTus(model=mongoengine_upload)
+  flask_tus = FlaskTus(model=MongoengineUpload)
   flask_tus.init_app()
 
   return app
 ```
+For the MongoDB model, the collection will be named
+> uploads
+
 ## Extending
 The extensions can be extending in terms of callbacks and model, as in the following examples
 ```python 
 from flask_tus import FlaskTus
+
 
 class FlaskTusExtended(FlaskTus):
     def on_complete(self):
@@ -89,12 +93,14 @@ The callbacks are as follows:
 * `FlaskTus.pre_delete` - Callback for pre-delete of upload
 * `FlaskTus.post_delete` - Callback for post-delete of upload
 
+For the model, "MongoengineUpload", MD5 can be calculated and set for the upload by accesing the property `MD5`
+
 Model can be extended by inheriting the base models:
 ```python 
-rom flask_tus.models import MongoUpload
+from flask_tus.models import MongoengineUpload
 from mongoengine import StringField
 
-class CustomModel(MongoUpload)
+class CustomModel(MongoengineUpload)
   owner = StringField()
     
   @classmethod
