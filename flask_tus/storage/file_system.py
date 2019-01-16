@@ -24,6 +24,9 @@ class FileSystem(BaseFile):
         if self.file:
             return self.file.close()
 
+    def read(self, chunk_size = 1024):
+        return self.file.read(chunk_size)
+
     def write(self, content):
         return self.file.write(content)
 
