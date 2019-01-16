@@ -78,7 +78,7 @@ class TestCallbacks(object):
             assert self.pre_saves == chunks
             assert self.post_saves == chunks
             assert self.completed
-        
+
         # Assert callback side-effects, assuming successful deletion
         with self.app.app_context():
             self.flask_tus.model.get(resource_id).delete()
