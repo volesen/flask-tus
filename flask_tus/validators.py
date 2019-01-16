@@ -47,6 +47,22 @@ def validate_patch(upload):
         validate_chunk(request.data, upload_checksum)
 
 
+# Link: https://tus.io/protocols/resumable-upload.html#checksum
+def validate_chunk(chunk, upload_checksum):
+    algorithm, checksum = extract_checksum(upload_checksum)
+
+    # The server may respond 400 Bad Request if the checksum algorithm is not supported by the server
+    if algorithm not in SUPPORTED_ALGORITHMS:
+        raise TusError(400)
+
+    m = hashlib.new(algorithm)
+    m.update(chunk)
+
+    # The server may respond 460 Checksum Mismatch if the checksums mismatch
+    if m.hexdigest() != checksum:
+        raise TusError(460)
+
+
 # Link: https://tus.io/protocols/resumable-upload.html#head
 def validate_head(upload):
     # If the servers receives a HEAD request against a non-existent resource it SHOULD return a 404 Not Found status.
@@ -72,19 +88,3 @@ def validate_delete(upload):
     # Check if termination-extension is used
     if 'termination' not in current_app.config['TUS_EXTENSION']:
         raise TusError(404)
-
-
-# Link: https://tus.io/protocols/resumable-upload.html#checksum
-def validate_chunk(chunk, upload_checksum):
-    algorithm, checksum = extract_checksum(upload_checksum)
-
-    # The server may respond 400 Bad Request if the checksum algorithm is not supported by the server
-    if algorithm not in SUPPORTED_ALGORITHMS:
-        raise TusError(400)
-
-    m = hashlib.new(algorithm)
-    m.update(chunk)
-
-    # The server may respond 460 Checksum Mismatch if the checksums mismatch
-    if m.hexdigest() != checksum:
-        raise TusError(460)
