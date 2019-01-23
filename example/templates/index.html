@@ -1,45 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Flask-Tus upload demo</title>
 </head>
+
 <body>
-<form>
-    <input id="tus-upload" type="file" name="file">
-</form>
-<script src="https://cdn.jsdelivr.net/npm/tus-js-client@1.5.1/dist/tus.min.js"></script>
-<script>
-    var input = document.getElementById("tus-upload");
+    <form>
+        <input id="tus-upload" type="file" name="file">
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/tus-js-client@1.5.1/dist/tus.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.0/spark-md5.js"></script>
+    <script src="{{ url_for('static', filename='fingerprint.js') }}"></script>
+    <script>
 
-    input.addEventListener("change", function (e) {
-        // Get the selected file from the input element
-        var file = e.target.files[0];
-        console.log('file', file);
+        var input = document.getElementById("tus-upload");
 
-        // Create a new tus upload
-        var upload = new tus.Upload(file, {
-            endpoint: "http://" + location.host + "/files/",
-            retryDelays: [0, 1000, 3000, 5000],
-            chunkSize: 1000,
-            metadata: {
-                filename: file.name
-            },
-            onError: function (error) {
-                console.log("Failed because: " + error)
-            },
-            onProgress: function (bytesUploaded, bytesTotal) {
-                var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
-                console.log(bytesUploaded, bytesTotal, percentage + "%")
-            },
-            onSuccess: function () {
-                console.log("Download %s from %s", upload.file.name, upload.url)
+        var md5 = '';
+
+        function calculate_md5(file) {
+
+            var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
+                chunkSize = 1048576,                              // Read in chunks of 1MB
+                chunks = Math.ceil(file.size / chunkSize),
+                currentChunk = 0,
+                spark = new SparkMD5.ArrayBuffer(),
+                fileReader = new FileReader(),
+                md5 = 'test';
+                
+            fileReader.onload = function (e) {
+                spark.append(e.target.result);                   // Append array buffer
+
+                currentChunk++;
+                if (currentChunk < chunks) {
+                    loadNext();
+                } else {
+                    // On successful completetion
+                    md5 = spark.end();
+                    console.info('computed hash', md5);  // Compute hash
+                }
+            };
+
+            fileReader.onerror = function () {
+                console.warn('oops, something went wrong.');
+            };
+
+            function loadNext() {
+                var start = currentChunk * chunkSize,
+                    end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize;
+
+                fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
             }
-        });
 
-        // Start the upload
-        upload.start()
-    })
-</script>
+            loadNext();
+
+            return md5
+            
+        }
+
+        input.addEventListener("change", function (e) {
+            // Get the selected file from the input element
+            var file = e.target.files[0];
+
+            // Calculate fingerprint of upload
+            var hash = calculate_md5(file) // undefined;
+
+            // Create a new tus upload
+            var upload = new tus.Upload(file, {
+                endpoint: "http://" + location.host + "/files/",
+                retryDelays: [0, 1000, 3000, 5000],
+                chunkSize: 1000,
+                fingerprint: (file, options) => { console.log(hash); return hash },
+                metadata: {
+                    fingerprint: hash,
+                    filename: file.name
+                },
+                onError: function (error) {
+                    console.log("Failed because: " + error)
+                },
+                onProgress: function (bytesUploaded, bytesTotal) {
+                    var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
+                    console.log(bytesUploaded, bytesTotal, percentage + "%")
+                },
+                onSuccess: function () {
+                    console.log("Download %s from %s", upload.file.name, upload.url)
+                }
+            });
+
+            // Start the upload
+            upload.start()
+        })
+    </script>
 </body>
+
 </html>
