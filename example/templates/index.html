@@ -17,79 +17,59 @@
 
         var input = document.getElementById("tus-upload");
 
-        var md5 = '';
-
-        function calculate_md5(file) {
-
-            var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
-                chunkSize = 1048576,                              // Read in chunks of 1MB
-                chunks = Math.ceil(file.size / chunkSize),
-                currentChunk = 0,
-                spark = new SparkMD5.ArrayBuffer(),
-                fileReader = new FileReader(),
-                md5 = 'test';
-                
-            fileReader.onload = function (e) {
-                spark.append(e.target.result);                   // Append array buffer
-
-                currentChunk++;
-                if (currentChunk < chunks) {
-                    loadNext();
-                } else {
-                    // On successful completetion
-                    md5 = spark.end();
-                    console.info('computed hash', md5);  // Compute hash
-                }
-            };
-
-            fileReader.onerror = function () {
-                console.warn('oops, something went wrong.');
-            };
-
-            function loadNext() {
-                var start = currentChunk * chunkSize,
-                    end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize;
-
-                fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
-            }
-
-            loadNext();
-
-            return md5
-            
-        }
-
         input.addEventListener("change", function (e) {
             // Get the selected file from the input element
-            var file = e.target.files[0];
+            var file = e.target.files[0],
+                md5 = '';
 
-            // Calculate fingerprint of upload
-            var hash = calculate_md5(file) // undefined;
 
-            // Create a new tus upload
-            var upload = new tus.Upload(file, {
-                endpoint: "http://" + location.host + "/files/",
-                retryDelays: [0, 1000, 3000, 5000],
-                chunkSize: 1000,
-                fingerprint: (file, options) => { console.log(hash); return hash },
-                metadata: {
-                    fingerprint: hash,
-                    filename: file.name
-                },
-                onError: function (error) {
-                    console.log("Failed because: " + error)
-                },
-                onProgress: function (bytesUploaded, bytesTotal) {
-                    var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
-                    console.log(bytesUploaded, bytesTotal, percentage + "%")
-                },
-                onSuccess: function () {
-                    console.log("Download %s from %s", upload.file.name, upload.url)
+            var slice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
+                chunk_size = 10000000,
+                chunks = Math.ceil(file.size / chunk_size),
+                current_chunk = 0,
+                spark = new SparkMD5.ArrayBuffer();
+            function onload(e) {
+                spark.append(e.target.result);  // append chunk
+                current_chunk++;
+                if (current_chunk < chunks) {
+                    read_next_chunk();
+                } else {
+                    md5 = spark.end();
+                    // Create a new tus upload
+                    var upload = new tus.Upload(file, {
+                        endpoint: "http://" + location.host + "/files/",
+                        retryDelays: [0, 1000, 3000, 5000],
+                        chunkSize: 1000,
+                        fingerprint: (file, options) => { console.log(md5); return md5 },
+                        metadata: {
+                            fingerprint: md5,
+                            filename: file.name
+                        },
+                        onError: function (error) {
+                            console.log("Failed because: " + error)
+                        },
+                        onProgress: function (bytesUploaded, bytesTotal) {
+                            var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
+                            console.log(bytesUploaded, bytesTotal, percentage + "%")
+                        },
+                        onSuccess: function () {
+                            console.log("Download %s from %s", upload.file.name, upload.url)
+                        }
+                    });
+
+                    // Start the upload
+                    upload.start()
                 }
-            });
+            };
+            function read_next_chunk() {
+                var reader = new FileReader();
+                reader.onload = onload;
+                var start = current_chunk * chunk_size,
+                    end = Math.min(start + chunk_size, file.size);
+                reader.readAsArrayBuffer(slice.call(file, start, end));
+            };
+            read_next_chunk();
 
-            // Start the upload
-            upload.start()
         })
     </script>
 </body>
