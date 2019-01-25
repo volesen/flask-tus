@@ -81,7 +81,7 @@ class TestCallbacks(object):
 
         # Assert callback side-effects, assuming successful deletion
         with self.app.app_context():
-            self.flask_tus.model.get(resource_id).delete()
+            self.flask_tus.repo.find_by_id(resource_id).delete()
 
         assert self.pre_delete
         assert self.post_delete

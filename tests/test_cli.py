@@ -26,7 +26,7 @@ class TestResponses(object):
 
         # Create expired upload
         with self.app.app_context():
-            self.flask_tus.model.get(resource_id).created_on -= self.app.config['TUS_TIMEDELTA']
+            self.flask_tus.repo.find_by_id(resource_id).created_on -= self.app.config['TUS_TIMEDELTA']
         
         # Run CLI command
         runner = self.app.test_cli_runner()    

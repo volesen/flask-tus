@@ -25,7 +25,8 @@ class TestResponses(object):
 
         # Create expired upload and delete
         with self.app.app_context():
-            self.flask_tus.model.get(resource_id).created_on -= self.app.config['TUS_TIMEDELTA']
+            self.flask_tus.repo.find_by_id(resource_id).created_on -= self.app.config['TUS_TIMEDELTA']
+            # TODO: Integrate with repo
             self.flask_tus.model.delete_expired()
 
         headers = {'Tus-Version': '1.0.0', 'Content-Length': '1000', 'Upload-Offset': '0'}

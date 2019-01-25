@@ -50,5 +50,5 @@ class TestMD5(object):
             resource_id = resource_url.split('/')[-1]
 
             with self.app.app_context():
-                upload = self.flask_tus.model.get(resource_id)
+                upload = self.flask_tus.repo.find_by_id(resource_id)
                 assert upload.md5 == self.md5.hexdigest()

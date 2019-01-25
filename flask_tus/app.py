@@ -12,9 +12,9 @@ from flask_tus.repositories import MongoengineRepository
 class FlaskTus(object):
     app = None
     model = None
+    repo = None
 
     def __init__(self, app=None, model=MongoengineUpload):
-
         if app:
             self.app = app
             self.init_app(app, model)
@@ -26,11 +26,14 @@ class FlaskTus(object):
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
 
         app.register_error_handler(TusError, TusError.error_handler)
+
         app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload',
                          self.create_upload, methods=['OPTIONS', 'POST'])
         app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>',
                          'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
 
+        self.repo = MongoengineRepository(model)
+        self.model = model
         app.flask_tus = self
 
     def create_upload(self):
@@ -50,13 +53,13 @@ class FlaskTus(object):
             if upload_metadata:
                 upload_metadata = extract_metadata(upload_metadata)
 
-            upload = self.model.create(upload_length, upload_metadata)
+            upload = self.repo.create(upload_length, upload_metadata)
             # TODO replace it with repo.create()
 
             return Response.post_response(upload)
 
     def modify_upload(self, upload_id):
-        upload = self.model.get(upload_id)
+        upload = self.repo.find_by_id(upload_id)
 
         # Get state of a resource
         if request.method == 'HEAD':

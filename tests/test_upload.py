@@ -43,6 +43,6 @@ class TestUpload(object):
 
             #  Get filename for upload and compare test file and uploaded file
             resource_id = resource_url.split('/')[-1]
-            uploaded_file = self.flask_tus.model.get(resource_id).file.name
+            uploaded_file = self.flask_tus.repo.find_by_id(resource_id).file.name
 
             assert filecmp.cmp(TEST_FILE, uploaded_file)
