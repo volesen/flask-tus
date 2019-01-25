@@ -6,7 +6,7 @@ from flask import request
 from flask_tus.exceptions import TusError
 from flask_tus.models.mongoengine_upload import MongoengineUpload
 from flask_tus.utilities import extract_metadata
-from flask_tus.repositories import MongoengineRepository, repo
+from flask_tus.repositories import MongoengineRepository, Repo
 
 
 class FlaskTus(object):
@@ -32,7 +32,8 @@ class FlaskTus(object):
         app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>',
                          'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
 
-        self.repo = repo(model)
+        self.repo = Repo(model)
+        # TODO: Refactor last two lines
         self.model = model
         app.flask_tus = self
 
@@ -52,6 +53,11 @@ class FlaskTus(object):
 
             if upload_metadata:
                 upload_metadata = extract_metadata(upload_metadata)
+                fingerprint = upload_metadata.get('fingerprint')
+
+                if fingerprint:
+                    # If fingerprint is set
+                    upload = self.repo.find_by(fingerprint=fingerprint)
 
             upload = self.repo.create(upload_length, upload_metadata)
 

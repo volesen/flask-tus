@@ -1,7 +1,6 @@
 import os
 import datetime
 
-from mongoengine import StringField
 from flask_mongoengine import MongoEngine
 from flask import Flask, render_template
 from flask_tus import FlaskTus
@@ -22,7 +21,7 @@ app.config['MONGODB_SETTINGS'] = {
 
 
 mongodb = MongoEngine(app)
-flask_tus = FlaskTus(app, model=mongodb)
+flask_tus = FlaskTus(app, model=MongoengineUpload)
 
 
 @app.route('/')

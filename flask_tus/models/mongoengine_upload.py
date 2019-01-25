@@ -12,6 +12,7 @@ class MongoengineUpload(MongoengineBaseUpload):
     _md5 = StringField()
     valid = BooleanField()
     validation_error = StringField(default='')
+    fingerprint = StringField()
 
     # TODO: Review this - this could be added in utils.py as a helpher func as it is also used in tests
     @staticmethod

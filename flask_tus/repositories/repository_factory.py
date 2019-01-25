@@ -3,8 +3,12 @@ from ..models import MongoengineBaseUpload
 from ..exceptions import TusError
 
 
-def repo(model):
-    if isinstance(model(), MongoengineBaseUpload):
-        return MongoengineRepository(model)
-    else:
-        raise TusError('Model not supported')
+class Repo:
+    ''' Repository factory '''
+
+    def __init__(self, model):
+        if isinstance(model(), MongoengineBaseUpload):
+            self.__class__ = MongoengineRepository
+            self.model = model
+        else:
+            raise Exception

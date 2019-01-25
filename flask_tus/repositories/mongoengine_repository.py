@@ -4,8 +4,10 @@ import uuid
 from flask import current_app
 from mongoengine import DoesNotExist
 from mongoengine.errors import ValidationError
-from ..exceptions import TusError
+
 from .base_repository import BaseRepository
+from ..utilities import get_extension
+from ..exceptions import TusError
 
 
 class MongoengineRepository(BaseRepository):
