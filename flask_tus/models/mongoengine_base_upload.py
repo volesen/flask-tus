@@ -1,5 +1,3 @@
-import os
-import uuid
 import datetime
 
 from flask import current_app
@@ -8,8 +6,6 @@ from mongoengine import IntField
 from mongoengine import DictField
 from mongoengine import StringField
 from mongoengine import DateTimeField
-from mongoengine import DoesNotExist
-from mongoengine.errors import ValidationError
 
 from .base_model import BaseTusUpload
 from ..exceptions import TusError
