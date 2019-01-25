@@ -1,12 +1,14 @@
 import pytest
 import hashlib
+from flask_tus.models.mongoengine_upload import MongoengineBaseUpload, MongoengineUpload
 
 CHUNK_SIZE = 1024
 TEST_FILE = 'tests/data/flask.png'
 
 
-@pytest.mark.usefixtures('custom_client')
+@pytest.mark.usefixtures('class_client')
 class TestMD5(object):
+
     md5 = hashlib.md5()
 
     @staticmethod
@@ -14,7 +16,11 @@ class TestMD5(object):
         return iter(lambda: file.read(chunk_size), b'')
 
     def test_checksum_upload(self):
+        if not isinstance(self.flask_tus.model(), MongoengineUpload):
+            pytest.skip("This only test non-base mongoengine upload")
+
         with open(TEST_FILE, 'rb') as file:
+
             file_length = len(file.read())
 
             # Set file pos to 0 after reading

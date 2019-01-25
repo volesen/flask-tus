@@ -18,16 +18,6 @@ def create_app(config):
     return app, flask_tus
 
 
-# TODO : Keep code DRY
-@pytest.fixture(scope='class', params=[MongoengineUploadConfig])
-def custom_client(request):
-    request.cls.app, request.cls.flask_tus = create_app(request.param)
-    request.param.init_db()
-    request.cls.client = request.cls.app.test_client()
-    yield
-    # Teardown here if needed
-
-
 @pytest.fixture(scope='class', params=configs)
 def class_client(request):
     request.cls.app, request.cls.flask_tus = create_app(request.param)
