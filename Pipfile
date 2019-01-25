@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 flask = ">=1.0.2"
-mongomock = ">=3.14.0"
 flask-mongoengine = "*"
 
 [dev-packages]

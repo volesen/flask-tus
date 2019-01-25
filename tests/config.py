@@ -19,7 +19,7 @@ class MongoengineBaseUploadConfig(BaseTestConfig):
 
     @classmethod
     def init_db(cls):
-        mongoengine.connect('test', host='mongomock://localhost', port=27017)
+        mongoengine.connect('test', host='mongodb', port=27017)
 
 
 class MongoengineUploadConfig(MongoengineBaseUploadConfig):

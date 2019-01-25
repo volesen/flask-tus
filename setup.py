@@ -10,7 +10,7 @@ setup(
     packages=find_packages(),
     dependency_links=[],
     install_requires=['Flask>=1.0.2', 'mongoengine>=0.16.2'],
-    test_requires=['pytest>=4.0.0', 'mongomock>=3.14.0'],
+    test_requires=['pytest>=4.0.0',
     extras_require={},
     package_data={},
     author="Vincent Olesen",

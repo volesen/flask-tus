@@ -2,5 +2,4 @@ flask>=1.0.2
 pytest>=4.0.0
 mongoengine>=0.16.2
 flask_mongoengine>=0.9.5
-mongomock>=3.14.0
 gunicorn>=19.9.0
