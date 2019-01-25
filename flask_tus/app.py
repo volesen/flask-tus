@@ -6,7 +6,7 @@ from flask import request
 from flask_tus.exceptions import TusError
 from flask_tus.models.mongoengine_upload import MongoengineUpload
 from flask_tus.utilities import extract_metadata
-from flask_tus.repositories import MongoengineRepository
+from flask_tus.repositories import MongoengineRepository, repo
 
 
 class FlaskTus(object):
@@ -32,7 +32,7 @@ class FlaskTus(object):
         app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>',
                          'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
 
-        self.repo = MongoengineRepository(model)
+        self.repo = repo(model)
         self.model = model
         app.flask_tus = self
 
