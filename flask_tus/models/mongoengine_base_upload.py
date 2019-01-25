@@ -34,32 +34,6 @@ class MongoengineBaseUpload(Document, BaseTusUpload):
         'allow_inheritance': True
     }
 
-    @classmethod
-    def create(cls, length, metadata):
-        path = os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
-
-        filename = ''
-
-        if metadata and metadata.get('filename'):
-            filename = metadata.get('filename')
-            path += '.' + get_extension(filename)
-            del metadata['filename']
-
-        if length:
-            length = int(length)
-
-        # TODO Replace all alike code with repository calls
-        return cls.objects.create(length=length, path=path, filename=filename, metadata=metadata)
-
-    @classmethod
-    def get(cls, upload_id):
-        try:
-            upload = cls.objects.get(pk=upload_id)
-            return upload
-        except (DoesNotExist, ValidationError):
-            # If object_id is not valid or resource does not exist
-            return None
-
     @property
     def upload_id(self):
         return str(self.id)
@@ -102,7 +76,7 @@ class MongoengineBaseUpload(Document, BaseTusUpload):
             super(MongoengineBaseUpload, self).delete(*args, **kwargs)
             current_app.flask_tus.post_delete()
 
-
     @classmethod
     def delete_expired(cls):
-        cls.objects(created_on__lte=datetime.datetime.now() - current_app.config['TUS_TIMEDELTA']).delete()
+        cls.objects(created_on__lte=datetime.datetime.now() -
+                    current_app.config['TUS_TIMEDELTA']).delete()

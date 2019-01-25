@@ -54,7 +54,6 @@ class FlaskTus(object):
                 upload_metadata = extract_metadata(upload_metadata)
 
             upload = self.repo.create(upload_length, upload_metadata)
-            # TODO replace it with repo.create()
 
             return Response.post_response(upload)
 
