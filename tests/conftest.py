@@ -2,9 +2,9 @@ import pytest
 
 from flask import Flask
 from flask_tus import FlaskTus
-from .config import MemoryUploadConfig, MongoengineUploadConfig, MongoengineBaseUploadConfig
+from .config import MongoengineUploadConfig, MongoengineBaseUploadConfig
 
-configs = (MemoryUploadConfig, MongoengineUploadConfig, MongoengineBaseUploadConfig)
+configs = (MongoengineUploadConfig, MongoengineBaseUploadConfig)
 
 
 def create_app(config):

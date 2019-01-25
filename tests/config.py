@@ -3,7 +3,7 @@ import mongoengine
 from tempfile import mkdtemp
 from datetime import timedelta
 
-from flask_tus.models import MemoryUpload, MongoengineBaseUpload, MongoengineUpload
+from flask_tus.models import MongoengineBaseUpload, MongoengineUpload
 
 
 class BaseTestConfig:
@@ -14,20 +14,12 @@ class BaseTestConfig:
     TUS_TIMEDELTA = timedelta(days=1)
 
 
-class MemoryUploadConfig(BaseTestConfig):
-    UPLOAD_MODEL = MemoryUpload
-
-    @classmethod
-    def init_db(cls):
-        pass
-
-
 class MongoengineBaseUploadConfig(BaseTestConfig):
     UPLOAD_MODEL = MongoengineBaseUpload
 
     @classmethod
     def init_db(cls):
-        mongoengine.connect('mongoenginetest', host='mongomock://localhost')
+        mongoengine.connect('test', host='mongomock://localhost', port=27017)
 
 
 class MongoengineUploadConfig(MongoengineBaseUploadConfig):
