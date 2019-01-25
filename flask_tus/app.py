@@ -6,6 +6,7 @@ from flask import request
 from flask_tus.exceptions import TusError
 from flask_tus.models.mongoengine_upload import MongoengineUpload
 from flask_tus.utilities import extract_metadata
+from flask_tus.repositories import MongoengineRepository
 
 
 class FlaskTus(object):
@@ -19,19 +20,10 @@ class FlaskTus(object):
             self.init_app(app, model)
 
     # Application factory
+
     def init_app(self, app, model=MongoengineUpload):
         app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
-
-        # TODO: We could check if the model inherits from MongoEngine Document
-        #       which would be cleaner and more concise.
-        #       That would require import of MongoEngine which is unessescary
-        #       in many usecases
-
-        if str(model.__class__) == "<class 'flask_mongoengine.MongoEngine'>":
-            self.model = MongoengineUpload
-        else:
-            self.model = model
 
         app.register_error_handler(TusError, TusError.error_handler)
         app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload',
