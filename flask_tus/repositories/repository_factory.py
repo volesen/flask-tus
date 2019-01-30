@@ -6,9 +6,9 @@ from ..exceptions import TusError
 class Repo:
     ''' Repository factory '''
 
-    def __init__(self, model):
+    def __init__(self, model, db):
         if isinstance(model(), MongoengineBaseUpload):
             self.__class__ = MongoengineRepository
-            self.model = model
+            self.__init__(model, db)
         else:
             raise Exception

@@ -1,11 +1,11 @@
 class BaseRepository(object):
     """This class is an interface"""
     model = None
-    session = None
+    db = None
 
-    def __init__(self, model, session):
+    def __init__(self, model, db):
         self.model = model
-        self.session = session
+        self.db = db
 
     def instantiate(self, **kwargs):
         """Crate instance of a model"""

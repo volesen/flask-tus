@@ -15,7 +15,7 @@ class BaseTestConfig:
 
 
 class MongoengineBaseUploadConfig(BaseTestConfig):
-    UPLOAD_MODEL = MongoengineBaseUpload
+    model = MongoengineBaseUpload
 
     @classmethod
     def init_db(cls):
@@ -23,4 +23,4 @@ class MongoengineBaseUploadConfig(BaseTestConfig):
 
 
 class MongoengineUploadConfig(MongoengineBaseUploadConfig):
-    UPLOAD_MODEL = MongoengineUpload
+    model = MongoengineUpload

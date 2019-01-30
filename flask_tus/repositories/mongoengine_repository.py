@@ -12,12 +12,12 @@ from ..exceptions import TusError
 
 class MongoengineRepository(BaseRepository):
 
-    def __init__(self, model):
+    def __init__(self, model, db):
         if "mongoengine.base" not in str(model.__class__):
             raise TusError(
                 500, "Model doesn't match mongoengine class", "Exception")
 
-        super(MongoengineRepository, self).__init__(model)
+        super(MongoengineRepository, self).__init__(model, db)
 
     def find_all(self):
         return self.model.objects.all()
@@ -27,8 +27,7 @@ class MongoengineRepository(BaseRepository):
 
     def find_by_id(self, id):
         try:
-            upload = self.model.objects.get(pk=id)
-            return upload
+            return self.model.objects.get(pk=id)
         except (DoesNotExist, ValidationError):
             # If object_id is not valid or resource does not exist
             return None

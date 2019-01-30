@@ -13,7 +13,11 @@ def create_app(config):
     app.config.from_object(config)
 
     flask_tus = FlaskTus()
-    flask_tus.init_app(app, model=app.config['UPLOAD_MODEL'])
+
+    model = config.model
+    db = config.init_db()
+
+    flask_tus.init_app(app, model=model, db=db)
 
     return app, flask_tus
 
@@ -21,7 +25,6 @@ def create_app(config):
 @pytest.fixture(scope='class', params=configs)
 def class_client(request):
     request.cls.app, request.cls.flask_tus = create_app(request.param)
-    request.param.init_db()
     request.cls.client = request.cls.app.test_client()
     yield
     # Teardown here if needed

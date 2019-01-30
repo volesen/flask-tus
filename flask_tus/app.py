@@ -14,14 +14,14 @@ class FlaskTus(object):
     model = None
     repo = None
 
-    def __init__(self, app=None, model=MongoengineUpload):
+    def __init__(self, app=None, model=MongoengineUpload, db=None):
         if app:
             self.app = app
             self.init_app(app, model)
 
     # Application factory
 
-    def init_app(self, app, model=MongoengineUpload):
+    def init_app(self, app, model, db=None):
         app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
 
@@ -32,7 +32,9 @@ class FlaskTus(object):
         app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>',
                          'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
 
-        self.repo = Repo(model)
+        # Repository factory
+        self.repo = Repo(model, db)
+
         # TODO: Refactor last two lines
         self.model = model
         app.flask_tus = self
