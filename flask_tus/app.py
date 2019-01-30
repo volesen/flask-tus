@@ -17,7 +17,7 @@ class FlaskTus(object):
     def __init__(self, app=None, model=MongoengineUpload, db=None):
         if app:
             self.app = app
-            self.init_app(app, model)
+            self.init_app(app, model, db)
 
     # Application factory
 
