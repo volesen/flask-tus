@@ -22,7 +22,7 @@ class SQLAlchemyModel(Base, BaseTusUpload):
     path = Column(String)
     filename = Column(String)
     length = Column(Integer)
-    _metadata = Column(String) # "metadata" is protected
+    _metadata = Column(String)  # "metadata" is protected
 
     @property
     def file(self):
@@ -35,10 +35,6 @@ class SQLAlchemyModel(Base, BaseTusUpload):
     @property
     def expired(self):
         return datetime.datetime.now() > self.expires
-
-    def delete(self, *args, **kwargs):
-        # TODO: Refactor to repo
-        pass
 
     def append_chunk(self, chunk):
         # Handle file and increment offset on every append
