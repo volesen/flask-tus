@@ -71,8 +71,3 @@ class MongoengineBaseUpload(Document, BaseTusUpload):
         else:
             super(MongoengineBaseUpload, self).delete(*args, **kwargs)
             current_app.flask_tus.post_delete()
-
-    @classmethod
-    def delete_expired(cls):
-        cls.objects(created_on__lte=datetime.datetime.now() -
-                    current_app.config['TUS_TIMEDELTA']).delete()

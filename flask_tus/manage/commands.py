@@ -14,7 +14,7 @@ def delete_expired():
     ''' Deletes expired uploads '''
     click.echo('Deleting expired uploads')
     try:
-        current_app.flask_tus.model.delete_expired()
+        current_app.flask_tus.repo.delete_expired()
     except Exception as e:
         click.echo(e)
     else:

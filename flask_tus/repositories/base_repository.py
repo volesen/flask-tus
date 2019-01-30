@@ -34,3 +34,6 @@ class BaseRepository(object):
     def find_by_id(self, id):
         """Find instance by model id"""
         raise NotImplementedError
+
+    def delete_expired(self):
+        raise NotImplementedError

@@ -1,5 +1,6 @@
 import os
 import uuid
+import datetime
 
 from flask import current_app
 from mongoengine import DoesNotExist
@@ -76,3 +77,7 @@ class MongoengineRepository(BaseRepository):
                 return False
 
         return instance.update(**kwargs)
+
+    def delete_expired(self):
+        self.model.objects(created_on__lte=datetime.datetime.now() -
+                           current_app.config['TUS_TIMEDELTA']).delete()
