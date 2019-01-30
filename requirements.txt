@@ -3,3 +3,5 @@ pytest>=4.0.0
 mongoengine>=0.16.2
 flask_mongoengine>=0.9.5
 gunicorn>=19.9.0
+SQLAlchemy>=1.2.17
+Flask-SQLAlchemy >=2.3.2
