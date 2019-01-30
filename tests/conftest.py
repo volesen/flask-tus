@@ -2,9 +2,10 @@ import pytest
 
 from flask import Flask
 from flask_tus import FlaskTus
-from .config import MongoengineUploadConfig, MongoengineBaseUploadConfig
+from .config import MongoengineUploadConfig, MongoengineBaseUploadConfig, SQLAlchemyModelConfig
 
-configs = (MongoengineUploadConfig, MongoengineBaseUploadConfig)
+configs = (MongoengineUploadConfig,
+           MongoengineBaseUploadConfig, SQLAlchemyModelConfig)
 
 
 def create_app(config):
@@ -15,7 +16,7 @@ def create_app(config):
     flask_tus = FlaskTus()
 
     model = config.model
-    db = config.init_db()
+    db = config.init_db(app)
 
     flask_tus.init_app(app, model=model, db=db)
 

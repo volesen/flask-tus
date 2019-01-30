@@ -1,5 +1,6 @@
 from .mongoengine_repository import MongoengineRepository
-from ..models import MongoengineBaseUpload
+from .sqlalchemy_repository import SQLRepository
+from ..models import MongoengineBaseUpload, SQLAlchemyModel
 from ..exceptions import TusError
 
 
@@ -9,6 +10,11 @@ class Repo:
     def __init__(self, model, db):
         if isinstance(model(), MongoengineBaseUpload):
             self.__class__ = MongoengineRepository
-            self.__init__(model, db)
+
+        elif isinstance(model(), SQLAlchemyModel):
+            self.__class__ = SQLRepository
+
         else:
             raise Exception
+
+        self.__init__(model, db)
