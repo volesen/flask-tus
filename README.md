@@ -10,7 +10,7 @@ Following software stack is required to run this project:
 
 # Installation
 
-### pipenv
+## pipenv
 ```bash
 $ git clone https://github.com/volesen/flask-tus.git
 $ cd flask-tus
@@ -19,7 +19,7 @@ $ pipenv --python /path/to/python3 install
 $ pipenv shell
 ```
 
-### virtualenviroment
+## virtualenviroment
 ```bash
 $ git clone https://github.com/volesen/flask-tus.git
 $ cd flask-tus
@@ -28,24 +28,42 @@ $ source venv/bin/activate
 $ ./setup.py install
 ```
 
-### docker
+## docker
 ```bash
 $ git clone https://github.com/volesen/flask-tus.git
 $ cd flask-tus
 $ docker-compose -f docker-compose.yml up
 ```
 
+# Running example
+If Docker is not used, a local Mongoengine database, or [Mongomock](http://github.com/mongomock/mongomock), is required, and the examples host-connection has to be changed.
 
-### Running a demo project
+## Python
 ```bash
 $ python demo/app.py
 ```
+## Docker
+
+```bash
+$ docker-compose -f docker-compose.yml up
+```
+
 Go to [127.0.0.1:5000](http://127.0.0.1:5000) and upload a file. The uploaded file will end in `demo/uploads/`
 
-### Testing project
+# Testing
+If Docker is not used, a local Mongoengine database, or [Mongomock](http://github.com/mongomock/mongomock), is required, and the examples host-connection has to be changed.
+
+## Python
 ```bash
 $ pytest -v tests/
 ```
+
+## Docker
+
+```bash
+$ docker-compose run app pytest tests
+```
+
 # Usage
 ## Settings
 Settings are added in app.config:
