@@ -14,15 +14,12 @@ from ..utilities import get_extension
 
 
 class MongoengineBaseUpload(Document, BaseTusUpload):
-    fingerprint = StringField()
     filename = StringField()
-    path = StringField()
+    path = StringField(required = True)
     offset = IntField(default=0)
     length = IntField()
     metadata = DictField()
     created_on = DateTimeField(default=datetime.datetime.now)
-    # TODO
-    modified_on = DateTimeField(default=datetime.datetime.now)
 
     meta = {
         'strict': False,
