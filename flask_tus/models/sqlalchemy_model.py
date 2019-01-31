@@ -45,7 +45,6 @@ class SQLAlchemyModel(Base, BaseTusUpload):
         # except OSError:
         except Exception as error:
             raise TusError(503, str(error), 'APIError')
-            # raise TusError(503, 'MongoUpload- Failed to append to a file.')
         else:
             # Increment offset
             self.offset += len(chunk)
