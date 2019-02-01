@@ -27,7 +27,7 @@ $ git clone https://github.com/volesen/flask-tus.git
 $ cd flask-tus
 $ virtualenv -p python3 venv
 $ source venv/bin/activate
-$ ./setup.py install
+$ python setup.py install
 ```
 
 ### docker
