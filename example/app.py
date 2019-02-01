@@ -5,7 +5,7 @@ from flask import Flask, render_template
 from flask_mongoengine import MongoEngine
 
 from flask_tus import FlaskTus
-from flask_tus.models import MongoengineUpload
+from flask_tus.models import MongoengineModel
 
 
 app = Flask(__name__)
@@ -21,8 +21,8 @@ app.config.update({
 })
 
 
-mongodb = MongoEngine(app)
-flask_tus = FlaskTus(app, model=MongoengineUpload)
+db = MongoEngine(app)
+flask_tus = FlaskTus(app, model=MongoengineModel, db=db)
 
 
 @app.route('/')
