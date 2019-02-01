@@ -52,7 +52,7 @@ class FlaskTus(object):
         if request.method == 'POST':
             Validator.validate_post()
 
-            # Crate a resource callback
+            # Call callback
             self.on_create()
 
             upload_length = request.headers.get('Upload-Length')

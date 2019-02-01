@@ -17,7 +17,7 @@ class TestMD5(object):
 
     def test_checksum_upload(self):
         if not isinstance(self.flask_tus.repo.model(), MongoengineModel):
-            pytest.skip("This only test non-base mongoengine upload")
+            pytest.skip("This only tests non-base mongoengine upload")
 
         with open(TEST_FILE, 'rb') as file:
 
