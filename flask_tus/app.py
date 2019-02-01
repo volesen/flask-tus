@@ -59,6 +59,9 @@ class FlaskTus(object):
 
             if upload_metadata:
                 upload_metadata = extract_metadata(upload_metadata)
+
+                Validator.validate_metadata(upload_metadata)
+
                 fingerprint = upload_metadata.get('fingerprint')
 
                 if fingerprint:

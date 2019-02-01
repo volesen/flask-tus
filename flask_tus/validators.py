@@ -3,7 +3,7 @@ import hashlib
 from flask import request, current_app
 from flask_tus.constants import SUPPORTED_ALGORITHMS
 from flask_tus.exceptions import TusError
-from flask_tus.utilities import extract_checksum
+from flask_tus.utilities import extract_checksum, get_extension
 
 
 def validate_version():
@@ -88,3 +88,15 @@ def validate_delete(upload):
     # Check if termination-extension is used
     if 'termination' not in current_app.config['TUS_EXTENSION']:
         raise TusError(404)
+
+
+def validate_metadata(metadata):
+    # TODO: Review this
+    # Check if extension is allowed
+    filename = metadata.get('filename')
+
+    if not filename:
+        return
+
+    if get_extension(filename) not in ALLOWED_EXTENSIONS:
+        raise TusError(406, 'Extensions not allowed')
