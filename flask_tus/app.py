@@ -1,7 +1,9 @@
+import tempfile
+import datetime
+
 import flask_tus.responses as Response
 import flask_tus.validators as Validator
 
-from tempfile import mkdtemp
 from flask import request
 from flask_tus.exceptions import TusError
 from flask_tus.models.mongoengine_upload import MongoengineUpload
@@ -22,8 +24,10 @@ class FlaskTus(object):
     # Application factory
 
     def init_app(self, app, model, db=None):
-        app.config.setdefault('TUS_UPLOAD_DIR', mkdtemp())
+        app.config.setdefault('TUS_UPLOAD_DIR', tempfile.mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
+        app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4GB
+        app.config.setdefault('TUS_TIMEDELTA', datetime.timedelta(days=1))
 
         app.register_error_handler(TusError, TusError.error_handler)
 
