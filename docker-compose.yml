@@ -3,15 +3,13 @@ version: "3"
 services:
   app:
     build: .
-    image: volesen/tus
     container_name: tus_dev_app
-    command: ash scripts/startup_app.sh
     depends_on:
       - mongodb
     volumes:
      - .:/app
     ports:
-      - "5000:80"
+      - "5000:5000"
 
     environment:
       DB_NAME: tus_dev
@@ -27,5 +25,4 @@ services:
       - "27017:27017"
     environment:
       TZ: Europe/Copenhagen
-    volumes:
-      - ./storage/permastore/mongo:/data/db
+    tmpfs: /data/db
