@@ -10,8 +10,8 @@ from ..utilities import get_extension
 
 
 class MongoengineBaseUpload(Document, BaseTusUpload):
-    filename = StringField()
-    path = StringField(required=True)
+    filename = StringField(max_length=255)
+    path = StringField(required=True, max_length=255)
     offset = IntField(default=0, required=True)
     length = IntField()
     metadata = DictField()
