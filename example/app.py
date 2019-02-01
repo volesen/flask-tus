@@ -10,14 +10,15 @@ from flask_tus.models import MongoengineUpload
 
 app = Flask(__name__)
 
-app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/example/uploads'
-app.config['TUS_TIMEDELTA'] = datetime.timedelta(days=1)
-
-app.config['MONGODB_SETTINGS'] = {
-    'db': os.environ.get('DB_NAME', 'tus_dev'),
-    'host': os.environ.get('DB_HOST', 'mongodb'),
-    'port': int(os.environ.get('DB_PORT', 27017)),
-}
+app.config.update({
+    'TUS_UPLOAD_DIR': os.getcwd() + '/example/uploads',
+    'TUS_TIMEDELTA': datetime.timedelta(days=1),
+    'MONGODB_SETTINGS': {
+        'db': os.environ.get('DB_NAME', 'tus_dev'),
+        'host': os.environ.get('DB_HOST', 'mongodb'),
+        'port': int(os.environ.get('DB_PORT', 27017)),
+    }
+})
 
 
 mongodb = MongoEngine(app)
