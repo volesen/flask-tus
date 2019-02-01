@@ -3,13 +3,13 @@ import datetime
 from flask import current_app
 from mongoengine import Document, IntField, DictField, StringField, DateTimeField
 
-from .base_model import BaseTusUpload
+from .base_model import BaseTusModel
 from ..exceptions import TusError
 from ..storage.file_system import FileSystem
 from ..utilities import get_extension
 
 
-class MongoengineBaseUpload(Document, BaseTusUpload):
+class MongoengineBaseModel(Document, BaseTusModel):
     filename = StringField(max_length=255)
     path = StringField(required=True, max_length=255)
     offset = IntField(default=0, required=True)
@@ -62,5 +62,5 @@ class MongoengineBaseUpload(Document, BaseTusUpload):
         except OSError:
             raise TusError(500)
         else:
-            super(MongoengineBaseUpload, self).delete(*args, **kwargs)
+            super(MongoengineBaseModel, self).delete(*args, **kwargs)
             current_app.flask_tus.post_delete()

@@ -1,6 +1,6 @@
 import pytest
 
-from flask_tus.models.base_model import BaseTusUpload
+from flask_tus.models.base_model import BaseTusModel
 from flask_tus.storage.base_file import BaseFile
 
 
@@ -11,7 +11,7 @@ class TestRepo:
             # self.app.flask_tus.model = model
             upload = self.app.flask_tus.repo.create(None, None)
 
-            assert isinstance(upload, BaseTusUpload)
+            assert isinstance(upload, BaseTusModel)
 
     def test_get(self):
         with self.app.app_context():
@@ -19,7 +19,7 @@ class TestRepo:
             upload_id = self.app.flask_tus.repo.create(None, None).upload_id
             upload = self.app.flask_tus.repo.find_by_id(upload_id)
 
-            assert isinstance(upload, BaseTusUpload)
+            assert isinstance(upload, BaseTusModel)
 
     def test_file(self):
         with self.app.app_context():

@@ -1,6 +1,6 @@
 from .mongoengine_repository import MongoengineRepository
 from .sqlalchemy_repository import SQLRepository
-from ..models import MongoengineBaseUpload, SQLAlchemyModel
+from ..models import MongoengineBaseModel, SQLAlchemyModel
 from ..exceptions import TusError
 
 
@@ -8,7 +8,7 @@ class Repo:
     ''' Repository factory '''
 
     def __init__(self, model, db):
-        if isinstance(model(), MongoengineBaseUpload):
+        if isinstance(model(), MongoengineBaseModel):
             self.__class__ = MongoengineRepository
 
         elif isinstance(model(), SQLAlchemyModel):

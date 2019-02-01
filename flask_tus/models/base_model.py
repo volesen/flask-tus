@@ -1,4 +1,4 @@
-class BaseTusUpload(object):
+class BaseTusModel(object):
     """Base for upload models"""
     upload_id = None
     created_on = None

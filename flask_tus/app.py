@@ -6,7 +6,7 @@ import flask_tus.validators as Validator
 
 from flask import request
 from flask_tus.exceptions import TusError
-from flask_tus.models.mongoengine_upload import MongoengineUpload
+from flask_tus.models.mongoengine_model import MongoengineModel
 from flask_tus.utilities import extract_metadata
 from flask_tus.repositories import MongoengineRepository, Repo
 
@@ -16,7 +16,7 @@ class FlaskTus(object):
     model = None
     repo = None
 
-    def __init__(self, app=None, model=MongoengineUpload, db=None):
+    def __init__(self, app=None, model=MongoengineModel, db=None):
         if app:
             self.app = app
             self.init_app(app, model, db)

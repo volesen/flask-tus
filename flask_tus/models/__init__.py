@@ -1,4 +1,4 @@
-from .base_model import BaseTusUpload
-from .mongoengine_upload import MongoengineUpload
-from .mongoengine_base_upload import MongoengineBaseUpload
+from .base_model import BaseTusModel
+from .mongoengine_model import MongoengineModel
+from .mongoengine_base_model import MongoengineBaseModel
 from .sqlalchemy_model import SQLAlchemyModel

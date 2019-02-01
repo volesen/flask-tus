@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from flask_sqlalchemy import SQLAlchemy
 
-from flask_tus.models import MongoengineBaseUpload, MongoengineUpload, SQLAlchemyModel
+from flask_tus.models import MongoengineBaseModel, MongoengineModel, SQLAlchemyModel
 from flask_tus.models.sqlalchemy_model import Base
 
 
@@ -20,7 +20,7 @@ class BaseTestConfig:
 
 
 class MongoengineBaseUploadConfig(BaseTestConfig):
-    model = MongoengineBaseUpload
+    model = MongoengineBaseModel
 
     @staticmethod
     def init_db(app):
@@ -28,7 +28,7 @@ class MongoengineBaseUploadConfig(BaseTestConfig):
 
 
 class MongoengineUploadConfig(MongoengineBaseUploadConfig):
-    model = MongoengineUpload
+    model = MongoengineModel
 
 
 class SQLAlchemyModelConfig(BaseTestConfig):

@@ -6,10 +6,10 @@ from mongoengine import BooleanField
 from mongoengine import DateTimeField
 from mongoengine import signals
 
-from .mongoengine_base_upload import MongoengineBaseUpload
+from .mongoengine_base_model import MongoengineBaseModel
 
 
-class MongoengineUpload(MongoengineBaseUpload):
+class MongoengineModel(MongoengineBaseModel):
     """Model to support features used at DTU Food"""
     # TODO Add owner field
     # owner = mongoengine.ReferenceField(User, required=False)
@@ -48,4 +48,4 @@ class MongoengineUpload(MongoengineBaseUpload):
         document.modify(set__modified_on=datetime.datetime.now())
 
 
-signals.post_save.connect(MongoengineUpload.post_save, sender=MongoengineUpload)
+signals.post_save.connect(MongoengineModel.post_save, sender=MongoengineModel)

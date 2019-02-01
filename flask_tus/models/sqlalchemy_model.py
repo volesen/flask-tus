@@ -5,14 +5,14 @@ from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-from .base_model import BaseTusUpload
+from .base_model import BaseTusModel
 from ..storage.file_system import FileSystem
 from ..exceptions import TusError
 
 Base = declarative_base()
 
 
-class SQLAlchemyModel(Base, BaseTusUpload):
+class SQLAlchemyModel(Base, BaseTusModel):
     __tablename__ = 'uploads'
 
     upload_id = Column(Integer, primary_key=True)
