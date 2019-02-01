@@ -13,7 +13,6 @@ from flask_tus.repositories import MongoengineRepository, Repo
 
 class FlaskTus(object):
     app = None
-    model = None
     repo = None
 
     def __init__(self, app=None, model=MongoengineModel, db=None):
