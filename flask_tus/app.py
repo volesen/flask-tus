@@ -39,8 +39,7 @@ class FlaskTus(object):
         # Repository factory
         self.repo = Repo(model, db)
 
-        # TODO: Refactor last two lines
-        self.model = model
+        # Inject flask_tus ass property to support CLI commands
         app.flask_tus = self
 
     def create_upload(self):
