@@ -1,11 +1,7 @@
 import datetime
 
 from flask import current_app
-from mongoengine import Document
-from mongoengine import IntField
-from mongoengine import DictField
-from mongoengine import StringField
-from mongoengine import DateTimeField
+from mongoengine import Document, IntField, DictField, StringField, DateTimeField
 
 from .base_model import BaseTusUpload
 from ..exceptions import TusError
@@ -15,11 +11,11 @@ from ..utilities import get_extension
 
 class MongoengineBaseUpload(Document, BaseTusUpload):
     filename = StringField()
-    path = StringField(required = True)
-    offset = IntField(default=0)
+    path = StringField(required=True)
+    offset = IntField(default=0, required=True)
     length = IntField()
     metadata = DictField()
-    created_on = DateTimeField(default=datetime.datetime.now)
+    created_on = DateTimeField(default=datetime.datetime.now, required=True)
 
     meta = {
         'strict': False,

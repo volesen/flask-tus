@@ -4,6 +4,7 @@ import datetime
 from mongoengine import StringField
 from mongoengine import BooleanField
 from mongoengine import DateTimeField
+from mongoengine import signals
 
 from .mongoengine_base_upload import MongoengineBaseUpload
 
@@ -14,9 +15,10 @@ class MongoengineUpload(MongoengineBaseUpload):
     # owner = mongoengine.ReferenceField(User, required=False)
     _md5 = StringField()
     valid = BooleanField()
-    validation_error = StringField(default='')
-    fingerprint = StringField()
+    filename = StringField(length=255, required=True)
+    fingerprint = StringField(length=255)
     modified_on = DateTimeField(default=datetime.datetime.now)
+    validation_error = StringField(default='')
 
     # TODO: Review this - this could be added in utils.py as a helpher func as it is also used in tests
     @staticmethod
@@ -24,7 +26,7 @@ class MongoengineUpload(MongoengineBaseUpload):
         return iter(lambda: file.read(chunk_size), b'')
 
     def append_chunk(self, chunk):
-        # Append chunk and clear _md5 of file
+        # Append chunk and clear MD5 if set
         super().append_chunk(chunk)
         self.modify(unset___md5=1)
 
@@ -40,3 +42,10 @@ class MongoengineUpload(MongoengineBaseUpload):
             self.modify(set___md5=md5.hexdigest())
 
         return self._md5
+
+    @classmethod
+    def post_save(cls, sender, document, **kwargs):
+        document.modify(set__modified_on=datetime.datetime.now())
+
+
+signals.post_save.connect(MongoengineUpload.post_save, sender=MongoengineUpload)

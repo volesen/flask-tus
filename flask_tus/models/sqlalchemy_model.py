@@ -1,4 +1,3 @@
-import uuid
 import datetime
 
 from flask import current_app
@@ -14,15 +13,15 @@ Base = declarative_base()
 
 
 class SQLAlchemyModel(Base, BaseTusUpload):
-    __tablename__ = 'upload'
+    __tablename__ = 'uploads'
 
     upload_id = Column(Integer, primary_key=True)
-    created_on = Column(DateTime, default=datetime.datetime.now)
-    offset = Column(Integer, default=0)
-    path = Column(String)
-    filename = Column(String)
+    filename = Column(String(255))
+    path = Column(String(255), nullable=False)
+    offset = Column(Integer, default=0, nullable=False)
     length = Column(Integer)
-    _metadata = Column(String)  # "metadata" is protected
+    _metadata = Column(String(255))  # "metadata" is protected
+    created_on = Column(DateTime, default=datetime.datetime.now, nullable=False)
 
     @property
     def file(self):
