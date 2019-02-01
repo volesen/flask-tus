@@ -22,7 +22,7 @@ class FlaskTus(object):
 
     # Application factory
 
-    def init_app(self, app, model, db=None):
+    def init_app(self, app, model, db=None, repo=None):
         app.config.setdefault('TUS_UPLOAD_DIR', tempfile.mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4GB
@@ -35,8 +35,11 @@ class FlaskTus(object):
         app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>',
                          'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
 
-        # Repository factory
-        self.repo = Repo(model, db)
+        if repo:
+            self.repo = repo
+        else:
+            # Repository factory
+            self.repo = Repo(model, db)
 
         # Inject flask_tus ass property to support CLI commands
         app.flask_tus = self
