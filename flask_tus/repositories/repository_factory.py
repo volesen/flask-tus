@@ -8,10 +8,10 @@ class Repo:
     ''' Repository factory '''
 
     def __init__(self, model, db):
-        if isinstance(model(), MongoengineBaseModel):
+        if isinstance(model, type(MongoengineBaseModel)):
             self.__class__ = MongoengineRepository
 
-        elif isinstance(model(), SQLAlchemyModel):
+        elif isinstance(model, type(SQLAlchemyModel)):
             self.__class__ = SQLRepository
 
         else:
