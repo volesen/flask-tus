@@ -1,21 +1,21 @@
 import os
 import datetime
 
-from flask_mongoengine import MongoEngine
 from flask import Flask, render_template
+from flask_mongoengine import MongoEngine
+
 from flask_tus import FlaskTus
 from flask_tus.models import MongoengineUpload
 
 
 app = Flask(__name__)
 
-app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/storage/uploads'
-app.config['TUS_UPLOAD_URL'] = '/files/'
-app.config['TUS_MAX_SIZE'] = 2 ** 32  # 4GB
+app.config['TUS_UPLOAD_DIR'] = os.getcwd() + '/example/uploads'
 app.config['TUS_TIMEDELTA'] = datetime.timedelta(days=1)
+
 app.config['MONGODB_SETTINGS'] = {
     'db': os.environ.get('DB_NAME', 'tus_dev'),
-    'host': os.environ.get('DB_HOST', 'database'),
+    'host': os.environ.get('DB_HOST', 'mongodb'),
     'port': int(os.environ.get('DB_PORT', 27017)),
 }
 
@@ -30,4 +30,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True, port=80)
+    app.run(host="0.0.0.0", debug=True)
