@@ -1,11 +1,9 @@
 import hashlib
 import datetime
 
-from mongoengine import StringField
-from mongoengine import BooleanField
-from mongoengine import DateTimeField
-from mongoengine import signals
+from mongoengine import StringField, BooleanField, DateTimeField, signals
 
+from ..utilities import read_chunks
 from .mongoengine_base_model import MongoengineBaseModel
 
 
@@ -20,11 +18,6 @@ class MongoengineModel(MongoengineBaseModel):
     modified_on = DateTimeField(default=datetime.datetime.now)
     validation_error = StringField(default='')
 
-    # TODO: Review this - this could be added in utils.py as a helpher func as it is also used in tests
-    @staticmethod
-    def __read_chunks(file, chunk_size=1024):
-        return iter(lambda: file.read(chunk_size), b'')
-
     def append_chunk(self, chunk):
         # Append chunk and clear MD5 if set
         super().append_chunk(chunk)
@@ -35,7 +28,7 @@ class MongoengineModel(MongoengineBaseModel):
         if self._md5 is None:
             md5 = hashlib.md5()
             with self.file.open() as file:
-                for chunk in self.__read_chunks(file):
+                for chunk in read_chunks(file):
                     md5.update(chunk)
 
             # Set MD5 fied to digest
