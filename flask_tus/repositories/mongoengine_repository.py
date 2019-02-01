@@ -23,15 +23,15 @@ class MongoengineRepository(BaseRepository):
         path = os.path.join(
             current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
+        if length:
+            length = int(length)
+
         filename = ''
 
         if metadata and metadata.get('filename'):
             filename = metadata.get('filename')
             path += '.' + get_extension(filename)
             del metadata['filename']
-
-        if length:
-            length = int(length)
 
         return self.model.objects.create(length=length, path=path, filename=filename, metadata=metadata, **kwargs)
 

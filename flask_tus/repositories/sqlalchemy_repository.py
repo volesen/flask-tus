@@ -14,12 +14,12 @@ class SQLRepository(BaseRepository):
     def __init__(self, model, db):
         super(SQLRepository, self).__init__(model, db)
 
-    def create(self, length, metadata):
-        if length:
-            length = int(length)
-
+    def create(self, length, metadata, **kwargs):
         path = os.path.join(
             current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
+
+        if length:
+            length = int(length)
 
         filename = ''
 
@@ -28,12 +28,11 @@ class SQLRepository(BaseRepository):
             path += '.' + get_extension(filename)
             del metadata['filename']
 
-
         filename = ''
 
         # Instantiate model
         instance = self.model(length=length, path=path,
-                              filename=filename, _metadata=metadata)
+                              filename=filename, _metadata=metadata, **kwargs)
 
         # Add and commit model to db
         self.db.session.add(instance)
@@ -48,7 +47,10 @@ class SQLRepository(BaseRepository):
         return self.db.session.query(self.model).get(id)
 
     def delete_expired(self):
-        self.db.session.query(self.model).filter(self.model.created_on <= datetime.datetime.now(
-        ) - current_app.config['TUS_TIMEDELTA']).delete()
+        # Get expired uploads
+        query = self.db.session.query(self.model).filter(
+            self.model.created_on <= datetime.datetime.now() - current_app.config['TUS_TIMEDELTA'])
 
+        # Delete expired uploads
+        query.delete()
         self.db.session.commit()
