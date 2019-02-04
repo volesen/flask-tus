@@ -23,7 +23,8 @@ class MongoengineBaseModel(Document, BaseTusModel):
     meta = {
         'strict': False,
         'collection': 'uploads',
-        'allow_inheritance': True
+        'allow_inheritance': True,
+        'indexes': ['upload_uuid']
     }
 
     def append_chunk(self, chunk):
