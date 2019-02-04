@@ -41,7 +41,7 @@ class FlaskTus(object):
             # Repository factory
             self.repo = Repo(model, db)
 
-        # Inject flask_tus ass property to support CLI commands
+        # Inject flask_tus as property to support CLI commands
         app.flask_tus = self
 
     def create_upload(self):
