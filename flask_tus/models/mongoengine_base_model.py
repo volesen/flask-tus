@@ -12,20 +12,12 @@ from ..utilities import get_extension
 
 class MongoengineBaseModel(Document, BaseTusModel):
     upload_uuid = UUIDField(binary=False, default=uuid.uuid4, unique=True, required=True)
-
     filename = StringField(max_length=255)
     path = StringField(max_length=255, required=True)
     length = IntField()
     offset = IntField(default=0, required=True)
     metadata = DictField()
     created_on = DateTimeField(default=datetime.datetime.now, required=True)
-
-    meta = {
-        'strict': False,
-        'collection': 'uploads',
-        'allow_inheritance': True,
-        'indexes': ['upload_uuid']
-    }
 
     def append_chunk(self, chunk):
         # Handle file and increment offset on every append
@@ -64,3 +56,10 @@ class MongoengineBaseModel(Document, BaseTusModel):
         else:
             super(MongoengineBaseModel, self).delete(*args, **kwargs)
             current_app.flask_tus.post_delete()
+
+    meta = {
+        'strict': False,
+        'collection': 'uploads',
+        'allow_inheritance': True,
+        'indexes': ['upload_uuid']
+    }
