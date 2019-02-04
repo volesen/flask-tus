@@ -1,7 +1,5 @@
 import base64
 
-from .constants import ALLOWED_EXTENSIONS
-
 
 def get_extension(filename, depth=1):
     return '.'.join(filename.split('.')[depth:])
