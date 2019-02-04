@@ -20,7 +20,7 @@ def get_uuid():
 class SQLAlchemyModel(Base, BaseTusModel):
     __tablename__ = 'uploads'
     id = Column(Integer, primary_key=True)
-    upload_uuid = Column(String(36), default=get_uuid, nullable=False)
+    upload_uuid = Column(String(36), default=get_uuid, unique=True, nullable=False)
     filename = Column(String(255))
     path = Column(String(255), nullable=False)
     length = Column(Integer)
