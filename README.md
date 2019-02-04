@@ -90,9 +90,8 @@ Settings are added in app.config:
 * `TUS_UPLOAD_URL` - Url of endpoint
 * `TUS_UPLOAD_DIR` - Path to upload directory. Can be changed with custom models (eg. for saving in AWS S3)
 * `TUS_MAX_SIZE` - Max size of a file-upload
-* `TUS_TIMEDELTA` - Time allowed to complete upload
-* 
-* 
+* `TUS_EXPIRATION` - Time allowed to complete upload (Must be insatce of datetime.timedelta)
+* `TUS_CHUNK_SIZE` - Chunk size used in calculation of MD5 
 
 
 ## Callbacks
