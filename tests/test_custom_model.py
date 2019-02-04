@@ -57,4 +57,5 @@ class TestMD5(object):
 
             with self.app.app_context():
                 upload = self.flask_tus.repo.find_by_id(resource_id)
+                upload.update_md5()
                 assert upload.md5 == self.md5.hexdigest()
