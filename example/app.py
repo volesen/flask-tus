@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 app.config.update({
     'TUS_UPLOAD_DIR': os.getcwd() + '/example/uploads',
-    'TUS_TIMEDELTA': datetime.timedelta(days=1),
+    'TUS_EXPIRATION': datetime.timedelta(days=1),
     'MONGODB_SETTINGS': {
         'db': os.environ.get('DB_NAME', 'tus_dev'),
         'host': os.environ.get('DB_HOST', 'mongodb'),

@@ -47,4 +47,4 @@ class MongoengineRepository(BaseRepository):
 
     def delete_expired(self):
         self.model.objects(created_on__lte=datetime.datetime.now() -
-                           current_app.config['TUS_TIMEDELTA']).delete()
+                           current_app.config['TUS_EXPIRATION']).delete()

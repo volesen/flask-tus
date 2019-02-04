@@ -22,7 +22,7 @@ class MongoengineModel(MongoengineBaseModel):
     def append_chunk(self, chunk):
         # Append chunk and clear MD5 if set
         super().append_chunk(chunk)
-        # TODO add comments on this behavior
+        # Seletes value of _md5 field
         self.modify(unset__md5=1)
 
     def update_md5(self):

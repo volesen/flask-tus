@@ -46,7 +46,7 @@ class SQLRepository(BaseRepository):
     def delete_expired(self):
         # Get expired uploads
         query = self.db.session.query(self.model).filter(
-            self.model.created_on <= datetime.datetime.now() - current_app.config['TUS_TIMEDELTA'])
+            self.model.created_on <= datetime.datetime.now() - current_app.config['TUS_EXPIRATION'])
 
         # Delete expired uploads
         query.delete()

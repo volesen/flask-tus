@@ -16,7 +16,7 @@ class BaseTestConfig:
     TUS_UPLOAD_DIR = tempfile.mkdtemp()
     TUS_UPLOAD_VIEW = '/files/'
     TUS_MAX_SIZE = 2 ** 32
-    TUS_TIMEDELTA = datetime.timedelta(days=1)
+    TUS_EXPIRATION = datetime.timedelta(days=1)
 
 
 class MongoengineBaseUploadConfig(BaseTestConfig):

@@ -11,7 +11,7 @@ class TestResponses(object):
         post_response = self.client.post('/files/', headers=headers)
         resource_url = post_response.headers['Location']
 
-        self.app.config['TUS_TIMEDELTA'] = datetime.timedelta(days=-1)
+        self.app.config['TUS_EXPIRATION'] = datetime.timedelta(days=-1)
         headers = {'Tus-Version': '1.0.0', 'Content-Length': '1000', 'Upload-Offset': '0'}
         patch_response = self.client.patch(resource_url, headers=headers)
         # Assert 410 gone as resource should be expired
@@ -26,7 +26,7 @@ class TestResponses(object):
 
         # Create expired upload
         with self.app.app_context():
-            self.flask_tus.repo.find_by_id(resource_id).created_on -= self.app.config['TUS_TIMEDELTA']
+            self.flask_tus.repo.find_by_id(resource_id).created_on -= self.app.config['TUS_EXPIRATION']
         
         # Run CLI command
         runner = self.app.test_cli_runner()    

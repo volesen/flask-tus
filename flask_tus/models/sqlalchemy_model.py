@@ -32,7 +32,7 @@ class SQLAlchemyModel(Base, BaseTusModel):
 
     @property
     def expires(self):
-        return self.created_on + current_app.config['TUS_TIMEDELTA']
+        return self.created_on + current_app.config['TUS_EXPIRATION']
 
     @property
     def expired(self):
