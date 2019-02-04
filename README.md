@@ -19,6 +19,7 @@ $ cd flask-tus
 # pipenv --python $(which python3) install
 $ pipenv --python /path/to/python3 install
 $ pipenv shell
+& pip install -e .
 ```
 
 ### virtualenviroment
@@ -27,7 +28,7 @@ $ git clone https://github.com/volesen/flask-tus.git
 $ cd flask-tus
 $ virtualenv -p python3 venv
 $ source venv/bin/activate
-$ python setup.py install
+& pip install -e .
 ```
 
 ### docker
