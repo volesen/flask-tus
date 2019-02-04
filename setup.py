@@ -18,8 +18,10 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="http://github.com/volesen/flask-tus",
     packages=setuptools.find_packages(),
-    install_requires=install_requires, 
-    tests_require=['pytest>=4.0.0'],
+    install_requires=install_requires,
+    extras_require={
+        'testing': ['pytest >= 4.2.0'],
+    },
     zip_safe=True,
     classifiers=[
         "Programming Language :: Python :: 3",
