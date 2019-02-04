@@ -2,76 +2,79 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Flask-Tus upload demo</title>
+  <meta charset="UTF-8">
+  <title>Flask-Tus upload demo</title>
+
+  <!--         var upload = new tus.Upload(file, {
+          endpoint: "http://" + location.host + "/files/",
+          retryDelays: [0, 1000, 3000, 5000],
+          chunkSize: 1000,
+          fingerprint: (file, options) => { return hash },
+          metadata: {
+            fingerprint: hash,
+            filename: file.name
+          },
+          onError: function (error) {
+            console.log("Failed because: " + error);
+          },
+          onProgress: function (bytesUploaded, bytesTotal) {
+            var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
+            console.log(bytesUploaded, bytesTotal, percentage + "%");
+          },
+          onSuccess: function () {
+            console.log("Download %s from %s", upload.file.name, upload.url);
+          }
+        });
+
+        // Start the upload
+        upload.start();
+      }); -->
 </head>
 
 <body>
-    <form>
-        <input id="tus-upload" type="file" name="file">
-    </form>
-    <script src="https://cdn.jsdelivr.net/npm/tus-js-client@1.5.1/dist/tus.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.0/spark-md5.js"></script>
-    <script src="{{ url_for('static', filename='fingerprint.js') }}"></script>
-    <script>
+  <form>
+    <input id="tus-upload" type="file" name="file">
+  </form>
+  <script src="https://cdn.jsdelivr.net/npm/tus-js-client@1.5.1/dist/tus.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.0/spark-md5.js"></script>
+  <script src="{{ url_for('static', filename='fingerprint.js') }}"></script>
+  <script>
 
-        var input = document.getElementById("tus-upload");
+    var input = document.getElementById("tus-upload");
 
-        input.addEventListener("change", function (e) {
-            // Get the selected file from the input element
-            var file = e.target.files[0],
-                md5 = '';
+    input.addEventListener("change", function (e) {
+      // Get the selected file from the input element
+      var file = e.target.files[0];
 
+      fingerprint(file, (hash) => {
+        // Create a new tus upload
+        var upload = new tus.Upload(file, {
+          endpoint: "http://" + location.host + "/files/",
+          retryDelays: [0, 1000, 3000, 5000],
+          chunkSize: 1000,
+          fingerprint: (file, options) => { return hash },
+          metadata: {
+            fingerprint: hash,
+            filename: file.name
+          },
+          onError: function (error) {
+            console.log("Failed because: " + error);
+          },
+          onProgress: function (bytesUploaded, bytesTotal) {
+            var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
+            console.log(bytesUploaded, bytesTotal, percentage + "%");
+          },
+          onSuccess: function () {
+            console.log("Download %s from %s", upload.file.name, upload.url);
+          }
+        });
 
-            var slice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
-                chunk_size = 10000000,
-                chunks = Math.ceil(file.size / chunk_size),
-                current_chunk = 0,
-                spark = new SparkMD5.ArrayBuffer();
-            function onload(e) {
-                spark.append(e.target.result);  // append chunk
-                current_chunk++;
-                if (current_chunk < chunks) {
-                    read_next_chunk();
-                } else {
-                    md5 = spark.end();
-                    // Create a new tus upload
-                    var upload = new tus.Upload(file, {
-                        endpoint: "http://" + location.host + "/files/",
-                        retryDelays: [0, 1000, 3000, 5000],
-                        chunkSize: 1000,
-                        fingerprint: (file, options) => { console.log(md5); return md5 },
-                        metadata: {
-                            fingerprint: md5,
-                            filename: file.name
-                        },
-                        onError: function (error) {
-                            console.log("Failed because: " + error)
-                        },
-                        onProgress: function (bytesUploaded, bytesTotal) {
-                            var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
-                            console.log(bytesUploaded, bytesTotal, percentage + "%")
-                        },
-                        onSuccess: function () {
-                            console.log("Download %s from %s", upload.file.name, upload.url)
-                        }
-                    });
+        // Start the upload
+        upload.start();
 
-                    // Start the upload
-                    upload.start()
-                }
-            };
-            function read_next_chunk() {
-                var reader = new FileReader();
-                reader.onload = onload;
-                var start = current_chunk * chunk_size,
-                    end = Math.min(start + chunk_size, file.size);
-                reader.readAsArrayBuffer(slice.call(file, start, end));
-            };
-            read_next_chunk();
-
-        })
-    </script>
+      });
+    });
+  </script>
 </body>
 
 </html>
