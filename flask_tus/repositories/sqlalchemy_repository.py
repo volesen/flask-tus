@@ -4,6 +4,7 @@ import datetime
 
 from flask import current_app
 
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from .base_repository import BaseRepository
 from ..utilities import get_extension
 from ..exceptions import TusError
@@ -41,7 +42,13 @@ class SQLRepository(BaseRepository):
         return self.db.session.query(self.model).filter(**kwargs)
 
     def find_by_id(self, id):
-        return self.db.session.query(self.model).get(id)
+        """ Finds upload by upload_uuid """
+        try:
+            return self.db.session.query(self.model).filter(self.model.upload_uuid == id).one()
+        except NoResultFound:
+            return None
+        except MultipleResultsFound:
+            raise TusError(500, 'upload_uuid not unique')
 
     def delete_expired(self):
         # Get expired uploads

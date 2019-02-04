@@ -40,7 +40,7 @@ class MongoengineRepository(BaseRepository):
 
     def find_by_id(self, id):
         try:
-            return self.model.objects.get(pk=id)
+            return self.model.objects.get(upload_uuid=id)
         except (DoesNotExist, ValidationError):
             # If object_id is not valid or resource does not exist
             return None

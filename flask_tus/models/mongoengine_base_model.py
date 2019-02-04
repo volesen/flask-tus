@@ -1,7 +1,8 @@
+import uuid
 import datetime
 
 from flask import current_app
-from mongoengine import Document, IntField, DictField, StringField, DateTimeField
+from mongoengine import Document, IntField, DictField, StringField, DateTimeField, UUIDField
 
 from .base_model import BaseTusModel
 from ..exceptions import TusError
@@ -10,8 +11,10 @@ from ..utilities import get_extension
 
 
 class MongoengineBaseModel(Document, BaseTusModel):
+    upload_uuid = UUIDField(binary=False, default=uuid.uuid4, unique=True, required=True)
+
     filename = StringField(max_length=255)
-    path = StringField(required=True, max_length=255)
+    path = StringField(max_length=255, required=True)
     length = IntField()
     offset = IntField(default=0, required=True)
     metadata = DictField()
@@ -25,7 +28,7 @@ class MongoengineBaseModel(Document, BaseTusModel):
 
     @property
     def upload_id(self):
-        return str(self.id)
+        return self.upload_uuid
 
     def append_chunk(self, chunk):
         # Handle file and increment offset on every append
