@@ -16,8 +16,8 @@ class TestRepo:
     def test_get(self):
         with self.app.app_context():
             # Create and get upload and assert it is an instance of BaseTusUpload
-            upload_id = self.app.flask_tus.repo.create(None, None).upload_id
-            upload = self.app.flask_tus.repo.find_by_id(upload_id)
+            upload_uuid = self.app.flask_tus.repo.create(None, None).upload_uuid
+            upload = self.app.flask_tus.repo.find_by_id(upload_uuid)
 
             assert isinstance(upload, BaseTusModel)
 

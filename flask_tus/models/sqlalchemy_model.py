@@ -31,10 +31,6 @@ class SQLAlchemyModel(Base, BaseTusModel):
     created_on = Column(DateTime, default=datetime.datetime.now, nullable=False)
 
     @property
-    def upload_id(self):
-        return self.upload_uuid
-
-    @property
     def file(self):
         return FileSystem(self.path)
 

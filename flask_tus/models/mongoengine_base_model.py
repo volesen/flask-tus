@@ -26,10 +26,6 @@ class MongoengineBaseModel(Document, BaseTusModel):
         'allow_inheritance': True
     }
 
-    @property
-    def upload_id(self):
-        return self.upload_uuid
-
     def append_chunk(self, chunk):
         # Handle file and increment offset on every append
         current_app.flask_tus.pre_save()

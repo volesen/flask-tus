@@ -25,14 +25,14 @@ class FlaskTus(object):
         app.config.setdefault('TUS_UPLOAD_DIR', tempfile.mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4GB
-        app.config.setdefault('TUS_TIMEDELTA', datetime.timedelta(days=1))
+        app.config.setdefault('TUS_EXPIRATION', datetime.timedelta(days=1))
         app.config.setdefault('TUS_CHUNK_SIZE', 1024)
 
         app.register_error_handler(TusError, TusError.error_handler)
 
         app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload',
                          self.create_upload, methods=['OPTIONS', 'POST'])
-        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_id>',
+        app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_uuid>',
                          'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
 
         if repo:
@@ -73,8 +73,8 @@ class FlaskTus(object):
 
             return Response.post_response(upload)
 
-    def modify_upload(self, upload_id):
-        upload = self.repo.find_by_id(upload_id)
+    def modify_upload(self, upload_uuid):
+        upload = self.repo.find_by_id(upload_uuid)
 
         # Get state of a resource
         if request.method == 'HEAD':

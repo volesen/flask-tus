@@ -27,7 +27,7 @@ def post_response(upload):
         response.headers['Upload-Length'] = upload.length
 
     # The Server MUST set the Location header to the URL of the created resource. This URL MAY be absolute or relative.
-    response.headers['location'] = current_app.config['TUS_UPLOAD_URL'] + str(upload.upload_id)
+    response.headers['location'] = current_app.config['TUS_UPLOAD_URL'] + str(upload.upload_uuid)
 
     response.headers['Upload-Expires'] = format_date(upload.expires)
 
