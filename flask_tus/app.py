@@ -26,6 +26,7 @@ class FlaskTus(object):
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4GB
         app.config.setdefault('TUS_TIMEDELTA', datetime.timedelta(days=1))
+        app.config.setdefault('TUS_CHUNK_SIZE', 1024)
 
         app.register_error_handler(TusError, TusError.error_handler)
 

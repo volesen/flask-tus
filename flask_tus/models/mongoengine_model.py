@@ -1,6 +1,7 @@
 import hashlib
 import datetime
 
+from flask import current_app
 from mongoengine import StringField, BooleanField, DateTimeField, signals
 
 from ..utilities import read_chunks
@@ -28,7 +29,7 @@ class MongoengineModel(MongoengineBaseModel):
         if self.md5 is None:
             md5 = hashlib.md5()
             with self.file.open() as file:
-                for chunk in read_chunks(file):
+                for chunk in read_chunks(file, current_app.config['TUS_CHUNK_SIZE']):
                     md5.update(chunk)
 
             # Set MD5 fied to digest
