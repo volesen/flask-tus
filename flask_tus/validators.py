@@ -1,7 +1,7 @@
 import hashlib
 
 from flask import request, current_app
-from flask_tus.constants import SUPPORTED_ALGORITHMS, ALLOWED_EXTENSIONS
+from flask_tus.constants import SUPPORTED_ALGORITHMS
 from flask_tus.exceptions import TusError
 from flask_tus.utilities import extract_checksum, get_extension
 
