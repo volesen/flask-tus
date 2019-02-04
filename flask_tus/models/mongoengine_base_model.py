@@ -12,8 +12,8 @@ from ..utilities import get_extension
 class MongoengineBaseModel(Document, BaseTusModel):
     filename = StringField(max_length=255)
     path = StringField(required=True, max_length=255)
-    offset = IntField(default=0, required=True)
     length = IntField()
+    offset = IntField(default=0, required=True)
     metadata = DictField()
     created_on = DateTimeField(default=datetime.datetime.now, required=True)
 

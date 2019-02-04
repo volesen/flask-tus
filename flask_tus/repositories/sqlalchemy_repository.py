@@ -22,13 +22,10 @@ class SQLRepository(BaseRepository):
             length = int(length)
 
         filename = ''
-
         if metadata and metadata.get('filename'):
             filename = metadata.get('filename')
             path += '.' + get_extension(filename)
             del metadata['filename']
-
-        filename = ''
 
         # Instantiate model
         instance = self.model(length=length, path=path,

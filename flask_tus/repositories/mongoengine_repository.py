@@ -12,6 +12,7 @@ from ..exceptions import TusError
 
 
 class MongoengineRepository(BaseRepository):
+
     def __init__(self, model, db):
         if "mongoengine.base" not in str(model.__class__):
             raise TusError(
@@ -27,7 +28,6 @@ class MongoengineRepository(BaseRepository):
             length = int(length)
 
         filename = ''
-
         if metadata and metadata.get('filename'):
             filename = metadata.get('filename')
             path += '.' + get_extension(filename)

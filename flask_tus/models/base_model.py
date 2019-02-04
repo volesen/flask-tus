@@ -1,13 +1,13 @@
 class BaseTusModel(object):
     """Base for upload models"""
     upload_id = None
-    created_on = None
     offset = None
     file = None
     path = None
     filename = None
     length = None
     metadata = None
+    created_on = None
 
     def append_chunk(self, chunk):
         raise NotImplementedError

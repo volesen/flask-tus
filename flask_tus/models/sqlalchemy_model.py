@@ -14,12 +14,15 @@ Base = declarative_base()
 
 class SQLAlchemyModel(Base, BaseTusModel):
     __tablename__ = 'uploads'
-
+    # TODO ad id field as uuid4
+    # TODO rename upload_id to upload_uuid4 -> as uuid4
     upload_id = Column(Integer, primary_key=True)
     filename = Column(String(255))
     path = Column(String(255), nullable=False)
-    offset = Column(Integer, default=0, nullable=False)
     length = Column(Integer)
+    offset = Column(Integer, default=0, nullable=False)
+    # TODO Implement below
+    # _metadata = Column(Integer, ForeignKey('_metadata.id'))
     _metadata = Column(String(255))  # "metadata" is protected
     created_on = Column(DateTime, default=datetime.datetime.now, nullable=False)
 
