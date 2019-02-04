@@ -2,7 +2,7 @@ import uuid
 import datetime
 
 from flask import current_app
-from sqlalchemy import Column, Integer, String, DateTime, create_engine
+from sqlalchemy import Column, Integer, String, DateTime, PickleType, create_engine
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -25,9 +25,7 @@ class SQLAlchemyModel(Base, BaseTusModel):
     path = Column(String(255), nullable=False)
     length = Column(Integer)
     offset = Column(Integer, default=0, nullable=False)
-    # TODO Implement below
-    # _metadata = Column(Integer, ForeignKey('_metadata.id'))
-    _metadata = Column(String(255))  # "metadata" is protected
+    _metadata = Column(PickleType)  # "metadata" is protected
     created_on = Column(DateTime, default=datetime.datetime.now, nullable=False)
 
     @property
