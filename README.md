@@ -117,10 +117,10 @@ class FlaskTusExtended(FlaskTus):
         print('Succesful upload')
 ```
 
-For the model, "MongoengineUpload", MD5 can be calculated and set for the upload by accesing the property `MD5` which could be done on the `flask_tus.on_completion` method, but should be done on by a task in production.
-
 ## Custom models
 Custom models and features can be added by suppling a custom repository in the instantiation of the extensions object.
+
+For the use-case based model, "MongoengineUpload", MD5 can be calculated and set for the upload by the metohod `update_md5` which could be done on the `flask_tus.on_completion` method, but should be done on by a task in production.
 
 # CLI
 
