@@ -680,9 +680,10 @@ var Upload = function () {
               // We only attempt a retry if
               // - we didn't exceed the maxium number of retries, yet, and
               // - this error was caused by a request or it's response and
-              // - the error is not a client error (status 4xx) and
+              // - the error is not a client error (status 4xx)
+              //   excluding 460 (checksum mismatch ) and
               // - the browser does not indicate that we are offline
-              var shouldRetry = _this2._retryAttempt < retryDelays.length && err.originalRequest != null && !inStatusCategory(err.originalRequest.status, 400) && isOnline;
+              var shouldRetry = _this2._retryAttempt < retryDelays.length && err.originalRequest != null && (!inStatusCategory(err.originalRequest.status, 400) || err.originalRequest.status == 460) && isOnline;
 
               if (!shouldRetry) {
                 _this2._emitError(err);
