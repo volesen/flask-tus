@@ -59,7 +59,12 @@ class FlaskTus(object):
             # Call callback
             self.on_create()
 
+            # Get and typecast upload length and metadata
             upload_length = request.headers.get('Upload-Length')
+
+            if upload_length:
+                upload_length = int(upload_length)
+
             upload_metadata = request.headers.get('Upload-Metadata')
 
             if upload_metadata:
@@ -72,7 +77,7 @@ class FlaskTus(object):
                 fingerprint = upload_metadata.get('fingerprint')
 
                 if fingerprint:
-                    # Get upload 
+                    # Get upload
                     upload = self.repo.find_by(fingerprint=fingerprint)
 
                     # If an upload has matching fingerprint

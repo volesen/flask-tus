@@ -19,9 +19,6 @@ class SQLRepository(BaseRepository):
         path = os.path.join(
             current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
-        if length:
-            length = int(length)
-
         filename = ''
         if metadata and metadata.get('filename'):
             filename = metadata.get('filename')
