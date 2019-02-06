@@ -1,4 +1,5 @@
 import hashlib
+import random
 
 from flask import request, current_app
 from flask_tus.constants import SUPPORTED_ALGORITHMS
@@ -91,12 +92,14 @@ def validate_delete(upload):
 
 
 def validate_metadata(metadata):
-    # TODO: Review this
     # Check if extension is allowed
     filename = metadata.get('filename')
 
-    if not filename:
+    # If filename or extension rules are not set
+    if not filename or not current_app.config.get('TUS_EXTENSION_WHITELIST') or not current_app.config.get('TUS_EXTENSION_BLACKLIST')
         return
 
-    if get_extension(filename) not in current_app.config['TUS_ALLOWED_EXTENSIONS']:
+    # SI
+    if get_extension(filename) not in current_app.config.get('TUS_ALLOWED_EXTENSIONS') or \
+       get_extension(filename) not current_app.config.get('TUS_EXTENSION_BLACKLIST'):
         raise TusError(406, 'Extensions not allowed')
