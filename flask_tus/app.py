@@ -28,9 +28,9 @@ class FlaskTus(object):
     def init_app(self, app, model, db=None, repo=None):
         app.config.setdefault('TUS_UPLOAD_DIR', tempfile.mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
-        app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4GB
+        app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4 GB
         app.config.setdefault('TUS_EXPIRATION', datetime.timedelta(days=1))
-        app.config.setdefault('TUS_CHUNK_SIZE', 1024)
+        app.config.setdefault('TUS_CHUNK_SIZE', 2**16 ) # 8 KB
 
         app.register_error_handler(TusError, TusError.error_handler)
 
@@ -103,7 +103,7 @@ class FlaskTus(object):
             chunk = request.data
             upload.append_chunk(chunk)
 
-            if upload.offset == int(upload.length):
+            if upload.offset == upload.length:
                 self.on_complete()
 
             return patch_response(upload)
