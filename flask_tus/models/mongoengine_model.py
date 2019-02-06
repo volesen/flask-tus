@@ -10,8 +10,6 @@ from .mongoengine_base_model import MongoengineBaseModel
 
 class MongoengineModel(MongoengineBaseModel):
     """Model to support features used at DTU Food"""
-    # TODO Add owner field
-    # owner = mongoengine.ReferenceField(User, required=False)
     md5 = StringField()
     filename = StringField(length=255, required=True)
     fingerprint = StringField(length=255)

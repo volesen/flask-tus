@@ -65,13 +65,19 @@ class FlaskTus(object):
             if upload_metadata:
                 upload_metadata = extract_metadata(upload_metadata)
 
+                # DTU Food usecase specific features
+
                 validate_metadata(upload_metadata)
 
                 fingerprint = upload_metadata.get('fingerprint')
 
                 if fingerprint:
-                    # If fingerprint is set
+                    # Get upload 
                     upload = self.repo.find_by(fingerprint=fingerprint)
+
+                    # If an upload has matching fingerprint
+                    if upload:
+                        return post_response(upload)
 
             upload = self.repo.create(upload_length, upload_metadata)
 
