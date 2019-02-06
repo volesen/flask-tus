@@ -1,10 +1,10 @@
 import hashlib
-import random
 
 from flask import request, current_app
-from flask_tus.constants import SUPPORTED_ALGORITHMS
-from flask_tus.exceptions import TusError
-from flask_tus.utilities import extract_checksum, get_extension
+
+from .constants import SUPPORTED_ALGORITHMS
+from .exceptions import TusError
+from .utilities import extract_checksum, get_extension
 
 
 def validate_version():
@@ -96,10 +96,12 @@ def validate_metadata(metadata):
     filename = metadata.get('filename')
 
     # If filename or extension rules are not set
-    if not filename or not current_app.config.get('TUS_EXTENSION_WHITELIST') or not current_app.config.get('TUS_EXTENSION_BLACKLIST')
+    if not filename or not current_app.config.get('TUS_EXTENSION_WHITELIST') or not current_app.config.get('TUS_EXTENSION_BLACKLIST'):
         return
 
-    # SI
-    if get_extension(filename) not in current_app.config.get('TUS_ALLOWED_EXTENSIONS') or \
-       get_extension(filename) not current_app.config.get('TUS_EXTENSION_BLACKLIST'):
-        raise TusError(406, 'Extensions not allowed')
+    if current_app.config.get('TUS_EXTENSION_WHITELIST'):
+        if get_extension(filename) not in current_app.config.get('TUS_EXTENSION_WHITELIST'):
+            raise TusError(406, 'Extensions not allowed')
+    else:
+        if get_extension(filename) in current_app.config.get('TUS_EXTENSION_BLACKLIST'):
+            raise TusError(406, 'Extensions not allowed')
