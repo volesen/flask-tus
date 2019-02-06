@@ -3,8 +3,8 @@ import uuid
 import datetime
 
 from flask import current_app
-
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+
 from .base_repository import BaseRepository
 from ..utilities import get_extension
 from ..exceptions import TusError

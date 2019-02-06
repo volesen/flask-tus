@@ -1,1 +1,1 @@
-from flask_tus.app import FlaskTus
+from .app import FlaskTus

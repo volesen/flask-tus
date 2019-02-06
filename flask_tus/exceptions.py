@@ -1,5 +1,5 @@
 from flask import jsonify
-from flask_tus.responses import make_base_response
+from .responses import make_base_response
 
 
 class TusError(Exception):
