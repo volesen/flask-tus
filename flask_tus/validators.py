@@ -72,6 +72,8 @@ def validate_head(upload):
 
 
 def validate_post():
+    # If the length of the upload exceeds the maximum, which MAY be specified using the Tus-Max-Size header, 
+    # the Server MUST respond with the 413 Request Entity Too Large status.
     upload_length = request.headers.get('Upload_Length')
 
     if upload_length is None:
