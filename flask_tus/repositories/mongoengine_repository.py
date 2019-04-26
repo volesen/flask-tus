@@ -14,21 +14,18 @@ from ..exceptions import TusError
 class MongoengineRepository(BaseRepository):
 
     def __init__(self, model, db):
-        if "mongoengine.base" not in str(model.__class__):
-            raise TusError(
-                500, "Model doesn't match mongoengine class", "Exception")
-
         super(MongoengineRepository, self).__init__(model, db)
 
     def create(self, length, metadata, **kwargs):
         path = os.path.join(
             current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
-        filename = ''
         if metadata and metadata.get('filename'):
             filename = metadata.get('filename')
             path += '.' + get_extension(filename)
             del metadata['filename']
+        else:
+            filename = ''
 
         return self.model.objects.create(length=length, path=path, filename=filename, metadata=metadata, **kwargs)
 
