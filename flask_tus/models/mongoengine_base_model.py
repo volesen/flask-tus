@@ -7,12 +7,10 @@ from mongoengine import Document, IntField, DictField, StringField, DateTimeFiel
 from .base_model import BaseTusModel
 from ..exceptions import TusError
 from ..storage.file_wrapper import FileWrapper
-from ..utilities import get_extension
 
 
 class MongoengineBaseModel(Document, BaseTusModel):
     upload_uuid = UUIDField(binary=False, default=uuid.uuid4, unique=True, required=True)
-    filename = StringField(max_length=255)
     path = StringField(max_length=255, required=True)
     length = IntField()
     offset = IntField(default=0, required=True)
@@ -26,7 +24,7 @@ class MongoengineBaseModel(Document, BaseTusModel):
         try:
             FileWrapper(self.path).append_chunk(chunk)
         except OSError as e:
-            raise TusError(str(e))
+            raise TusError(500)
         else:
             # Increment offset
             self.modify(inc__offset=len(chunk))

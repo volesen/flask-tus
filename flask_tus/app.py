@@ -1,17 +1,18 @@
+import os
+import uuid
 import tempfile
 import datetime
 
-from flask import request
+from flask import request, current_app
 
 import flask_tus.responses as Response
-
 from .utilities import extract_metadata
 from .exceptions import TusError
 from .repositories import Repo
 from .responses import (option_response, post_response,
                         head_response, patch_response, delete_response)
 from .validators import (validate_post, validate_head,
-                         validate_patch, validate_delete, validate_metadata)
+                         validate_patch, validate_delete)
 
 
 class FlaskTus(object):
@@ -27,7 +28,7 @@ class FlaskTus(object):
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4 GB
         app.config.setdefault('TUS_EXPIRATION', datetime.timedelta(days=1))
-        app.config.setdefault('TUS_CHUNK_SIZE', 2**16 ) # 8 KB
+        app.config.setdefault('TUS_CHUNK_SIZE', 2**16)  # 8 KB
 
         app.register_error_handler(TusError, TusError.error_handler)
 
@@ -58,30 +59,17 @@ class FlaskTus(object):
 
             # Get and typecast upload length and metadata
             upload_length = request.headers.get('Upload-Length')
-
             if upload_length:
                 upload_length = int(upload_length)
 
             upload_metadata = request.headers.get('Upload-Metadata')
-
             if upload_metadata:
                 upload_metadata = extract_metadata(upload_metadata)
 
-                # DTU Food usecase specific features
+            upload_path = self.filepath()
 
-                validate_metadata(upload_metadata)
-
-                fingerprint = upload_metadata.get('fingerprint')
-
-                if fingerprint:
-                    # Get upload
-                    upload = self.repo.find_by(fingerprint=fingerprint)
-
-                    # If an upload has matching fingerprint
-                    if upload:
-                        return post_response(upload)
-
-            upload = self.repo.create(upload_length, upload_metadata)
+            upload = self.repo.create(
+                length=upload_length, metadata=upload_metadata, path=upload_path)
 
             return post_response(upload)
 
@@ -111,6 +99,9 @@ class FlaskTus(object):
             upload.delete()
 
             return delete_response()
+
+    def filepath(self):
+        return os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
     def on_create(self):
         # Callback for creation of upload

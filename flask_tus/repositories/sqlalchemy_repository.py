@@ -1,12 +1,9 @@
-import os
-import uuid
 import datetime
 
 from flask import current_app
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from .base_repository import BaseRepository
-from ..utilities import get_extension
 from ..exceptions import TusError
 
 
@@ -15,19 +12,13 @@ class SQLRepository(BaseRepository):
     def __init__(self, model, db):
         super(SQLRepository, self).__init__(model, db)
 
-    def create(self, length, metadata, **kwargs):
-        path = os.path.join(
-            current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
-
-        filename = ''
-        if metadata and metadata.get('filename'):
-            filename = metadata.get('filename')
-            path += '.' + get_extension(filename)
-            del metadata['filename']
+    def create(self, *args, **kwargs):
+        # The field 'metadata' is reserved in SQLAlchemy therefore _metadata is used
+        metadata = kwargs.get('metata')
+        del kwargs['metadata']
 
         # Instantiate model
-        instance = self.model(length=length, path=path,
-                              filename=filename, _metadata=metadata, **kwargs)
+        instance = self.model(_metadata=metadata, **kwargs)
 
         # Add and commit model to db
         self.db.session.add(instance)
@@ -38,10 +29,10 @@ class SQLRepository(BaseRepository):
     def find_by(self, **kwargs):
         return self.db.session.query(self.model).filter(**kwargs)
 
-    def find_by_id(self, id):
+    def find_by_id(self, uuid):
         """ Finds upload by upload_uuid """
         try:
-            return self.db.session.query(self.model).filter(self.model.upload_uuid == id).one()
+            return self.db.session.query(self.model).filter(self.model.upload_uuid == uuid).one()
         except NoResultFound:
             return None
         except MultipleResultsFound:

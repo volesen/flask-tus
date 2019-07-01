@@ -21,7 +21,6 @@ class SQLAlchemyModel(Base, BaseTusModel):
     __tablename__ = 'uploads'
     id = Column(Integer, primary_key=True)
     upload_uuid = Column(String(36), default=get_uuid, unique=True, nullable=False)
-    filename = Column(String(255))
     path = Column(String(255), nullable=False)
     length = Column(Integer)
     offset = Column(Integer, default=0, nullable=False)
@@ -46,7 +45,7 @@ class SQLAlchemyModel(Base, BaseTusModel):
         try:
             FileWrapper(self.path).append_chunk(chunk)
         except OSError:
-            raise TusError(503)
+            raise TusError(500)
         else:
             # Increment offset
             self.offset += len(chunk)

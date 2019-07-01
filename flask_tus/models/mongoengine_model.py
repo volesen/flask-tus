@@ -12,7 +12,7 @@ from ..storage.file_wrapper import FileWrapper
 class MongoengineModel(MongoengineBaseModel):
     """Model to support features used at DTU Food"""
     md5 = StringField()
-    filename = StringField(length=255, required=True)
+    filename = StringField(length=255)#, required=True)
     fingerprint = StringField(length=255)
     valid = BooleanField()
     validation_error = StringField(default='')
