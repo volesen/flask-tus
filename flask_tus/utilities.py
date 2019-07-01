@@ -19,8 +19,8 @@ def extract_metadata(upload_metadata):
 
 
 def extract_checksum(upload_checksum):
-    # The Upload-Checksum request header consist of the name of the used checksum algorithm and the Base64 encoded
-    # checksum separated by a space.
+    # The Upload-Checksum request header consist of the name of the used checksum
+    # algorithm and the Base64 encoded checksum separated by a space.
     algorithm, value = upload_checksum.split(' ')
     checksum = base64.b64decode(value).decode('ascii')
     return algorithm, checksum

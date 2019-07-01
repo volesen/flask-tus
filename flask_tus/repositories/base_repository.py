@@ -1,5 +1,5 @@
 class BaseRepository(object):
-    """This class is an interface"""
+    """ Base class for repositories """
     model = None
     db = None
 

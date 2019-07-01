@@ -1,5 +1,5 @@
 class BaseTusModel(object):
-    """Base for upload models"""
+    """ Base class for upload models """
     upload_uuid = None
     offset = None
     file = None

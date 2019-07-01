@@ -21,11 +21,13 @@ def validate_patch(upload):
     if upload is None:
         raise TusError(404)
 
+    # If a Client does attempt to resume an upload which has since been removed by the Server,
+    # the Server SHOULD respond with the 404 Not Found or 410 Gone status.
     if upload.expired:
         raise TusError(410)
 
     # All PATCH requests MUST use Content-Type: application/offset+octet-stream, otherwise the server SHOULD return a
-    #  415 Unsupported Media Type status.
+    # 415 Unsupported Media Type status.
     if request.headers.get('Content-Type') != 'application/offset+octet-stream':
         raise TusError(415)
 
@@ -72,6 +74,8 @@ def validate_head(upload):
 
 
 def validate_post():
+    # If the length of the upload exceeds the maximum, which MAY be specified using the Tus-Max-Size header, 
+    # the Server MUST respond with the 413 Request Entity Too Large status.
     upload_length = request.headers.get('Upload_Length')
 
     if upload_length is None:

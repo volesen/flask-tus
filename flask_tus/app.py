@@ -15,13 +15,10 @@ from .validators import (validate_post, validate_head,
 
 
 class FlaskTus(object):
-    app = None
-    repo = None
-
     def __init__(self, app=None, model=None, db=None, repo=None):
         if app:
             self.app = app
-            self.init_app(app, model, db)
+            self.init_app(app, model, db, repo)
 
     # Application factory
 

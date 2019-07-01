@@ -6,6 +6,7 @@ from mongoengine import StringField, BooleanField, DateTimeField, signals
 
 from ..utilities import read_chunks
 from .mongoengine_base_model import MongoengineBaseModel
+from ..storage.file_wrapper import FileWrapper
 
 
 class MongoengineModel(MongoengineBaseModel):
@@ -24,13 +25,16 @@ class MongoengineModel(MongoengineBaseModel):
         self.modify(unset__md5=1)
 
     def update_md5(self):
+        """
+            Caclulates and sets md5 hash when md5 property is accesed
+        """
         if self.md5 is None:
             md5 = hashlib.md5()
-            with self.file.open() as file:
-                for chunk in read_chunks(file, current_app.config['TUS_CHUNK_SIZE']):
+            with FileWrapper(self.path, mode='rb') as f:
+                for chunk in read_chunks(f, current_app.config['TUS_CHUNK_SIZE']):
                     md5.update(chunk)
 
-            # Set MD5 fied to digest
+            # Set MD5 field to digest
             self.modify(set__md5=md5.hexdigest())
 
         return self.md5
