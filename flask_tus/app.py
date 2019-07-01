@@ -66,7 +66,7 @@ class FlaskTus(object):
             if upload_metadata:
                 upload_metadata = extract_metadata(upload_metadata)
 
-            upload_path = self.filepath()
+            upload_path = self.generate_path()
 
             upload = self.repo.create(
                 length=upload_length, metadata=upload_metadata, path=upload_path)
@@ -100,7 +100,7 @@ class FlaskTus(object):
 
             return delete_response()
 
-    def filepath(self):
+    def generate_path(self):
         return os.path.join(current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
 
     def on_create(self):
