@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 from .base_model import BaseTusModel
-from ..storage.file_system import FileSystem
+from ..storage.file_wrapper import FileWrapper
 from ..exceptions import TusError
 
 Base = declarative_base()
@@ -30,7 +30,7 @@ class SQLAlchemyModel(Base, BaseTusModel):
 
     @property
     def file(self):
-        return FileSystem(self.path)
+        return FileWrapper(self.path)
 
     @property
     def expires(self):
@@ -44,11 +44,9 @@ class SQLAlchemyModel(Base, BaseTusModel):
         # Handle file and increment offset on every append
         current_app.flask_tus.pre_save()
         try:
-            with self.file.open(mode='ab') as file:
-                file.write(chunk)
-        # except OSError:
-        except Exception as error:
-            raise TusError(503, str(error), 'APIError')
+            FileWrapper(self.path).append_chunk(chunk)
+        except OSError:
+            raise TusError(503)
         else:
             # Increment offset
             self.offset += len(chunk)
@@ -59,7 +57,7 @@ class SQLAlchemyModel(Base, BaseTusModel):
         # On unsuccessful deletion raise "500 Internal Server Error"
         current_app.flask_tus.pre_delete()
         try:
-            FileSystem(self.path).delete()
+            FileWrapper(self.path).delete()
         except OSError:
             raise TusError(500)
         else:

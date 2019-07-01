@@ -6,7 +6,7 @@ from mongoengine import Document, IntField, DictField, StringField, DateTimeFiel
 
 from .base_model import BaseTusModel
 from ..exceptions import TusError
-from ..storage.file_system import FileSystem
+from ..storage.file_wrapper import FileWrapper
 from ..utilities import get_extension
 
 
@@ -20,15 +20,13 @@ class MongoengineBaseModel(Document, BaseTusModel):
     created_on = DateTimeField(default=datetime.datetime.now, required=True)
 
     def append_chunk(self, chunk):
-        # Handle file and increment offset on every append
+        # Append chunk and increment offset on succes
+
         current_app.flask_tus.pre_save()
         try:
-            with self.file.open(mode='ab') as file:
-                file.write(chunk)
-        # except OSError:
-        except Exception as error:
-            raise TusError(503, str(error), 'APIError')
-            # raise TusError(503, 'MongoUpload- Failed to append to a file.')
+            FileWrapper(self.path).append_chunk(chunk)
+        except OSError as e:
+            raise TusError(str(e))
         else:
             # Increment offset
             self.modify(inc__offset=len(chunk))
@@ -36,7 +34,7 @@ class MongoengineBaseModel(Document, BaseTusModel):
 
     @property
     def file(self):
-        return FileSystem(self.path)
+        return FileWrapper(self.path)
 
     @property
     def expires(self):
@@ -50,7 +48,7 @@ class MongoengineBaseModel(Document, BaseTusModel):
         # On unsuccessful deletion raise "500 Internal Server Error"
         current_app.flask_tus.pre_delete()
         try:
-            FileSystem(self.path).delete()
+            FileWrapper(self.path).delete()
         except OSError:
             raise TusError(500)
         else:
