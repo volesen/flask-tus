@@ -1,13 +1,8 @@
 import base64
 
 
-def get_extension(filename, depth=1):
-    return '.'.join(filename.split('.')[depth:])
-
-
 def read_chunks(file, chunk_size=1024):
     return iter(lambda: file.read(chunk_size), b'')
-
 
 def extract_metadata(upload_metadata):
     metadata = {}

@@ -4,7 +4,7 @@ from flask import request, current_app
 
 from .constants import SUPPORTED_ALGORITHMS
 from .exceptions import TusError
-from .utilities import extract_checksum, get_extension
+from .utilities import extract_checksum
 
 
 def validate_version():
@@ -93,19 +93,3 @@ def validate_delete(upload):
     # Check if termination-extension is used
     if 'termination' not in current_app.config['TUS_EXTENSION']:
         raise TusError(404)
-
-
-def validate_metadata(metadata):
-    # Check if extension is allowed
-    filename = metadata.get('filename')
-
-    # If filename or extension rules are not set
-    if not filename or not current_app.config.get('TUS_EXTENSION_WHITELIST') or not current_app.config.get('TUS_EXTENSION_BLACKLIST'):
-        return
-
-    if current_app.config.get('TUS_EXTENSION_WHITELIST'):
-        if get_extension(filename) not in current_app.config.get('TUS_EXTENSION_WHITELIST'):
-            raise TusError(406, 'Extensions not allowed')
-    else:
-        if get_extension(filename) in current_app.config.get('TUS_EXTENSION_BLACKLIST'):
-            raise TusError(406, 'Extensions not allowed')
