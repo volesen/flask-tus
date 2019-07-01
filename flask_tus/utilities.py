@@ -5,6 +5,9 @@ def read_chunks(file, chunk_size=1024):
     return iter(lambda: file.read(chunk_size), b'')
 
 def extract_metadata(upload_metadata):
+    if not upload_metadata:
+        return None
+    
     metadata = {}
     for kv in upload_metadata.split(','):
         key, value = kv.split(' ')

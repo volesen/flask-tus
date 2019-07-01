@@ -62,9 +62,8 @@ class FlaskTus(object):
             if upload_length:
                 upload_length = int(upload_length)
 
-            upload_metadata = request.headers.get('Upload-Metadata')
-            if upload_metadata:
-                upload_metadata = extract_metadata(upload_metadata)
+            upload_metadata = extract_metadata(
+                request.headers.get('Upload-Metadata'))
 
             upload_path = self.generate_path()
 
