@@ -5,7 +5,6 @@ import datetime
 
 from flask import request, current_app
 
-import flask_tus.responses as Response
 from .utilities import extract_metadata
 from .exceptions import TusError
 from .repositories import Repo
