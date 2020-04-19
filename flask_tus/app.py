@@ -18,12 +18,13 @@ from .validators import (validate_post, validate_head,
 class FlaskTus(object):
     def __init__(self, app=None, model=None, db=None, repo=None):
         if app:
-            self.app = app
             self.init_app(app, model, db, repo)
 
     # Application factory
 
     def init_app(self, app, model, db=None, repo=None):
+        self.app = app
+
         app.config.setdefault('TUS_UPLOAD_DIR', tempfile.mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4 GB
