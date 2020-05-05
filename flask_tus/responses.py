@@ -26,6 +26,9 @@ def post_response(upload):
     else:
         response.headers['Upload-Length'] = upload.length
 
+    if upload.offset > 0 and upload.offset != upload.length:
+        response.headers['Upload-Offset'] = upload.offset
+
     # The Server MUST set the Location header to the URL of the created resource. This URL MAY be absolute or relative.
     response.headers['location'] = current_app.config['TUS_UPLOAD_URL'] + str(upload.upload_uuid)
 

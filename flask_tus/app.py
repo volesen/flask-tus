@@ -5,7 +5,6 @@ import datetime
 
 from flask import request, current_app
 
-import flask_tus.responses as Response
 from .utilities import extract_metadata
 from .exceptions import TusError
 from .repositories import Repo
@@ -18,12 +17,13 @@ from .validators import (validate_post, validate_head,
 class FlaskTus(object):
     def __init__(self, app=None, model=None, db=None, repo=None):
         if app:
-            self.app = app
             self.init_app(app, model, db, repo)
 
     # Application factory
 
     def init_app(self, app, model, db=None, repo=None):
+        self.app = app
+
         app.config.setdefault('TUS_UPLOAD_DIR', tempfile.mkdtemp())
         app.config.setdefault('TUS_UPLOAD_URL', '/files/')
         app.config.setdefault('TUS_MAX_SIZE', 2**32)  # 4 GB
@@ -33,7 +33,7 @@ class FlaskTus(object):
         app.register_error_handler(TusError, TusError.error_handler)
 
         app.add_url_rule(app.config['TUS_UPLOAD_URL'], 'create_upload',
-                         self.create_upload, methods=['OPTIONS', 'POST'])
+                         self.create_upload, methods=['OPTIONS', 'POST'], strict_slashes=False)
         app.add_url_rule(app.config['TUS_UPLOAD_URL'] + '<upload_uuid>',
                          'modify_upload', self.modify_upload, methods=['HEAD', 'PATCH', 'DELETE'])
 

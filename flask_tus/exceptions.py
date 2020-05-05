@@ -19,10 +19,7 @@ class TusError(Exception):
             raise error
 
         if error.throw_as == 'Header':
-            response = make_base_response(error.status_code)
-            response.message = error.message
-            response.status_code = error.status_code
-
+            response = make_base_response(error.status_code, error.message)
             return response
 
         if error.throw_as == 'JSON':

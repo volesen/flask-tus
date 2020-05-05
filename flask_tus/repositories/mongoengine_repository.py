@@ -14,7 +14,7 @@ class MongoengineRepository(BaseRepository):
         super(MongoengineRepository, self).__init__(model, db)
 
     def create(self, *args, **kwargs):
-        return self.model.objects.create(*args, **kwargs)
+        return self.model.objects.create(**kwargs)
 
     def find_by(self, *args,  **kwargs):
         return self.model.objects.filter(*args, **kwargs)

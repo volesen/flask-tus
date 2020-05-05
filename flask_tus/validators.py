@@ -24,7 +24,7 @@ def validate_patch(upload):
     # If a Client does attempt to resume an upload which has since been removed by the Server,
     # the Server SHOULD respond with the 404 Not Found or 410 Gone status.
     if upload.expired:
-        raise TusError(410)
+        raise TusError(410, 'upload expired')
 
     # All PATCH requests MUST use Content-Type: application/offset+octet-stream, otherwise the server SHOULD return a
     # 415 Unsupported Media Type status.
