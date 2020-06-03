@@ -19,7 +19,7 @@ class MongoengineRepository(BaseRepository):
 
     def create(self, length, metadata, **kwargs):
         upload_dir = time.strftime(current_app.config['TUS_UPLOAD_DIR'])
-        os.makedirs(upload_dir)
+        os.makedirs(upload_dir, exist_ok=True)
         path = os.path.join(upload_dir, str(uuid.uuid4()))
 
         if metadata and metadata.get('filename'):
