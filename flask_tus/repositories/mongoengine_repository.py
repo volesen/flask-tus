@@ -1,5 +1,6 @@
 import os
 import uuid
+import time
 import datetime
 
 from flask import current_app
@@ -17,8 +18,9 @@ class MongoengineRepository(BaseRepository):
         super(MongoengineRepository, self).__init__(model, db)
 
     def create(self, length, metadata, **kwargs):
-        path = os.path.join(
-            current_app.config['TUS_UPLOAD_DIR'], str(uuid.uuid4()))
+        upload_dir = time.strftime(current_app.config['TUS_UPLOAD_DIR'])
+        os.makedirs(upload_dir)
+        path = os.path.join(upload_dir, str(uuid.uuid4()))
 
         if metadata and metadata.get('filename'):
             filename = metadata.get('filename')
