@@ -28,7 +28,8 @@ class FileWrapper(BaseFile):
             if self.file:
                 # Close file before deleting (Otherwise Windows throws exception )
                 self.file.close()
-            os.remove(self.path)
+            if os.path.exists(self.path):
+                os.remove(self.path)
         except OSError:
             raise
 
